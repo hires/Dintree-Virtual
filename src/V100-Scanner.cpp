@@ -4,24 +4,20 @@
  * Written by: Andrew Kilpatrick
  * Copyright 2020: Andrew Kilpatrick
  *
- * This file is part of Dintree-VCV.
+ * This file is part of Dintree-Virtual.
  *
- * Dintree-VCV is free software: you can redistribute it and/or modify
+ * Dintree-Virtual is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Dintree-VCV is distributed in the hope that it will be useful,
+ * Dintree-Virtual is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Dintree-VCV.  If not, see <http://www.gnu.org/licenses/>.
- *
- * This code is is licensed under GPL with the additional requirement
- * that commercial hardware versions of this module, code or concept
- * not be made without express written permission from Andrew Kilpatrick.
+ * along with Dintree-Virtual.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #include "plugin.hpp"
