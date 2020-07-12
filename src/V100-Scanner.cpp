@@ -163,8 +163,11 @@ struct V100_Scanner : Module {
 
         // process CV input
         if(mode == MODE_CV) {
-            chan_a = clamp((int)(inputs[CTRL_IN].getVoltage() * 0.8 * gain), 0, 7);
+            chan_a = clamp((int)(inputs[CTRL_IN].getVoltage() * 0.1 * gain), 0, 7);
             lights[CTRL_LED].setBrightness(clamp(inputs[CTRL_IN].getVoltage() * 0.1, 0.0f, 1.0f));
+            if(random && old_chan != chan_a) {
+                chan_a = random::u32() % ((int)gain + 1);
+            }
         }
         // process clock input
         else {

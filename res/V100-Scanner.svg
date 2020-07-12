@@ -49,11 +49,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="22.242289"
-     inkscape:cy="112.67776"
+     inkscape:zoom="1.4"
+     inkscape:cx="-196.81838"
+     inkscape:cy="200.79519"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer2"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1029"
@@ -943,7 +943,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="template"
-     style="display:inline">
+     style="display:none">
     <g
        style="display:inline"
        transform="matrix(0,0.35277777,0.35277777,0,-70.022863,-43.70846)"
