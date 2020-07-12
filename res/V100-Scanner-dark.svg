@@ -16,7 +16,7 @@
    version="1.1"
    id="svg1896"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="V100-Scanner.svg">
+   sodipodi:docname="V100-Scanner-dark.svg">
   <defs
      id="defs1890">
     <linearGradient
@@ -172,7 +172,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Dark BG"
-     style="display:none">
+     style="display:inline">
     <path
        style="display:inline;fill:url(#linearGradient4954-6);fill-opacity:1;stroke:#6e6e6e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 5e-7,-4.9999998e-7 H 45.700003 V 128.5 H 5e-7 Z"
@@ -183,7 +183,7 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Light BG"
-     style="display:inline">
+     style="display:none">
     <path
        style="display:inline;fill:url(#linearGradient4954);fill-opacity:1;stroke:#6e6e6e;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 4.9999998e-7,3.5e-6 H 45.700001 V 128.5 H 4.9999998e-7 Z"

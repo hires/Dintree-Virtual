@@ -76,11 +76,15 @@ struct V100_Scanner : Module {
     int chan_a, chan_b, old_chan;
     int mode, random;
     int clk_state;
+    struct ModuleDefaults module_defaults;
 
     // constructor
 	V100_Scanner() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(CV_GAIN, 0.f, 1.f, 0.f, "");
+
+        // load module defaults from user file
+        loadDefaults(&module_defaults);
 
         // reset stuff
         clk_state = 0;
@@ -209,9 +213,16 @@ struct V100_Scanner : Module {
 
 // widgets
 struct V100_ScannerWidget : ModuleWidget {
+    SvgPanel* darkPanel;
+
 	V100_ScannerWidget(V100_Scanner* module) {
 		setModule(module);
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner.svg")));
+
+        darkPanel = new SvgPanel();
+        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner-dark.svg")));
+        darkPanel->visible = false;
+        addChild(darkPanel);
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -250,7 +261,49 @@ struct V100_ScannerWidget : ModuleWidget {
         addParam(createParamCentered<DintreeToggleSPDT>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
         addParam(createParamCentered<DintreeToggleSPDT>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
 	}
-};
 
+    void appendContextMenu(Menu *menu) override {
+        V100_Scanner *module = dynamic_cast<V100_Scanner*>(this->module);
+		assert(module);
+
+        // add theme chooser
+    	MenuLabel *spacerLabel = new MenuLabel();
+		menu->addChild(spacerLabel);
+
+        MenuLabel *themeLabel = new MenuLabel();
+        themeLabel->text = "Panel Theme";
+        menu->addChild(themeLabel);
+
+        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
+        lightItem->module = module;
+        menu->addChild(lightItem);
+
+        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
+        darkItem->module = module;
+        menu->addChild(darkItem);
+
+    	menu->addChild(new MenuLabel());
+    }
+
+    // handle changes to the panel theme
+    struct PanelThemeItem : MenuItem {
+        V100_Scanner *module;
+
+        void onAction(const event::Action &e) override {
+            module->module_defaults.darkTheme ^= 0x1;
+            saveDefaults(&module->module_defaults);
+        }
+    };
+
+    void step() override {
+        if(module) {
+//            panel->visible = ((((V100_Scanner*)module)->dark_theme) == 0);
+//            darkPanel->visible  = ((((V100_Scanner*)module)->dark_theme) == 1);
+            panel->visible = ((((V100_Scanner*)module)->module_defaults.darkTheme) == 0);
+            darkPanel->visible  = ((((V100_Scanner*)module)->module_defaults.darkTheme) == 1);
+        }
+        Widget::step();
+    }
+};
 
 Model* modelV100_Scanner = createModel<V100_Scanner, V100_ScannerWidget>("V100-Scanner");
