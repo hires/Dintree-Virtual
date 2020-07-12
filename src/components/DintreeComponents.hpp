@@ -30,9 +30,18 @@ using namespace rack;
 
 // SPDT switch
 struct DintreeToggleSPDT : SvgSwitch {
-    DintreeToggleSPDT()
-    {
+    DintreeToggleSPDT() {
         addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-down.svg")));
         addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-up.svg")));
+    }
+};
+
+// black knob with red
+struct DintreeKnobBlackRed : app::SvgKnob {
+    DintreeKnobBlackRed() {
+        minAngle = -0.8334 * M_PI;
+        maxAngle = 0.8334 * M_PI;
+        shadow->opacity = 0;
+        setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/knob-black_red.svg")));
     }
 };
