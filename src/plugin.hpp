@@ -8,3 +8,5 @@ extern Plugin* pluginInstance;
 
 // model definitions
 extern Model* modelV100_Scanner;
+
+#include "components/DintreeComponents.hpp"
