@@ -88,6 +88,9 @@ struct V100_Scanner : Module {
 
         // reset stuff
         clk_state = 0;
+        chan_a = 0;
+        chan_b = 0;
+        old_chan = 0;
         onReset();
         onSampleRateChange();
         setParams();
@@ -116,22 +119,22 @@ struct V100_Scanner : Module {
     // module initialize
     void onReset(void) override {
         random::init();
+        params[CV_GAIN].setValue(1.0);
     }
 
     // module randomize
     void onRandomize(void) override {
-        params[RAND_SW].setValue(random::uniform());
-        params[CV_SW].setValue(random::uniform());
+        // no action
     }
 
     // module added to engine
     void onAdd(void) override {
-
+        // no action
     }
 
     // module removed from engine
     void onRemove(void) override {
-
+        // no action
     }
 
     // set params based on input
@@ -164,7 +167,6 @@ struct V100_Scanner : Module {
 
         // process CV input
         if(mode == MODE_CV) {
-//            chan_a = clamp((int)(inputs[CTRL_IN].getVoltage() * params[CV_GAIN].getValue() * 0.8), 0, 7);
             chan_a = clamp((int)(inputs[CTRL_IN].getVoltage() * 0.8 * gain), 0, 7);
             lights[CTRL_LED].setBrightness(clamp(inputs[CTRL_IN].getVoltage() * 0.1, 0.0f, 1.0f));
         }
