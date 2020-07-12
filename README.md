@@ -18,7 +18,7 @@ not be made without express written permission from Andrew Kilpatrick.
 ### V100 Scanner
 **CV and voltage-control source sequencer / scanner**
 
-<img align="right" src="https://github.com/hires/Dintree-VCV/tree/master/res/images/V100-Scanner.png" />
+<img align="right" src="https://github.com/hires/Dintree-VCV/raw/master/res/images/V100-Scanner.png" />
 
 The V100 Scanner module can work as a voltage-controlled input selector,
 an input sequencer/switcher, or a source of randomly switching inputs. There
