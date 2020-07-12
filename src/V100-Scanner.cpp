@@ -219,7 +219,6 @@ struct V100_ScannerWidget : ModuleWidget {
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-//		addParam(createParamCentered<RoundBlackKnob>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::CV_GAIN));
         addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::CV_GAIN));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 19.792)), module, V100_Scanner::IN1));
