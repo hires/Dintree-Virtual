@@ -32,7 +32,21 @@
       "tags": [
         "Dual",
         "Envelope Generator",
-        "LFO"
+        "LFO",
+        "Hardware"
+      ]
+    },
+    {
+      "slug": "V102-Output_Mixer",
+      "name": "V102 Output Mixer",
+      "description": "Four Input Mixer with Pan Pots and Output Level Meter",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V102-output_mixer",
+      "tags": [
+        "Mixer",
+        "Pan",
+        "Quad",
+        "Utility",
+        "Hardware"
       ]
     }
   ]

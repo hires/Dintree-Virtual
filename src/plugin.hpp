@@ -9,6 +9,7 @@ extern Plugin* pluginInstance;
 // model definitions
 extern Model* modelV100_Scanner;
 extern Model* modelV101_Dual_Envelope;
+extern Model* modelV102_Output_Mixer;
 
 // defaults for modules that users can store
 struct ModuleDefaults {
