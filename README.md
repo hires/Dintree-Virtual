@@ -1,12 +1,14 @@
 # Dintree-Virtual
 
-This repo contains Dintree Virtual Rack Modules for VCV Rack. Dintree is
+This repo contains Dintree Virtual Rack Modules for
+[VCV Rack Virtual Eurorack DAW](https://vcvrack.com). Dintree is
 the name of DIY open-source modules created by Andrew Kilpatrick of
 Kilpatrick Audio. Please visit the links below for information about Andrew
 and his DIY and commercial music and audio projects.
 
 **Useful links:**
 
+* [VCV Rack Virtual Eurorack DAW](https://vcvrack.com)
 * [Dintree Synth DIY Site](http://dintree.com)
 * [Andrew Kilpatrick](https://www.andrewkilpatrick.org)
 * [Kilpatrick Audio](https://www.kilpatrickaudio.com)
