@@ -26,7 +26,7 @@
 // Dintree V100 Scanner module
 struct V100_Scanner : Module {
 	enum ParamIds {
-		RANGE,
+		POT_RANGE,
         RAND_SW,
         CV_SW,
 		NUM_PARAMS
@@ -81,7 +81,7 @@ struct V100_Scanner : Module {
     // constructor
 	V100_Scanner() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(RANGE, 0.f, 1.f, 0.f, "");
+		configParam(POT_RANGE, 0.f, 1.f, 0.f, "POT_RANGE");
 
         // load module defaults from user file
         loadDefaults(&module_defaults);
@@ -119,7 +119,7 @@ struct V100_Scanner : Module {
     // module initialize
     void onReset(void) override {
         random::init();
-        params[RANGE].setValue(1.0);
+        params[POT_RANGE].setValue(1.0);
     }
 
     // module randomize
@@ -163,7 +163,7 @@ struct V100_Scanner : Module {
         }
 
         // range control
-        range = params[RANGE].getValue() * 7.999;
+        range = params[POT_RANGE].getValue() * 7.999;
 
         // process CV input
         if(mode == MODE_CV) {
@@ -229,7 +229,7 @@ struct V100_ScannerWidget : ModuleWidget {
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::RANGE));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::POT_RANGE));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 19.792)), module, V100_Scanner::IN1));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 32.492)), module, V100_Scanner::IN2));

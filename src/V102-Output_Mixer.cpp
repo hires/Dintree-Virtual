@@ -82,6 +82,11 @@ struct V102_Output_Mixer : Module {
     float level4_r;
     float meter_outl;
     float meter_outr;
+    // DC block hist
+    float in_hist[4];
+    float in_hist2[4];
+    float sub_hist[2];
+    float sub_hist2[2];
 
 	V102_Output_Mixer() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -105,26 +110,34 @@ struct V102_Output_Mixer : Module {
 
     // process a sample
 	void process(const ProcessArgs& args) override {
-        float outl, outr;
+        float outl, outr, tempf1, tempf2, tempf3, tempf4;
 
         // state
         if(taskTimer.process()) {
             setParams();
         }
 
+        DSP_UTILS_DC_BLOCK(inputs[IN1].getVoltage(), tempf1, in_hist[0], in_hist2[0]);
+        DSP_UTILS_DC_BLOCK(inputs[IN2].getVoltage(), tempf2, in_hist[1], in_hist2[1]);
+        DSP_UTILS_DC_BLOCK(inputs[IN3].getVoltage(), tempf3, in_hist[2], in_hist2[2]);
+        DSP_UTILS_DC_BLOCK(inputs[IN4].getVoltage(), tempf4, in_hist[3], in_hist2[3]);
+
         // mixing
-        outl = inputs[IN1].getVoltage() * level1_l;
-        outl += inputs[IN2].getVoltage() * level2_l;
-        outl += inputs[IN3].getVoltage() * level3_l;
-        outl += inputs[IN4].getVoltage() * level4_l;
+        outl = tempf1 * level1_l;
+        outl += tempf2 * level2_l;
+        outl += tempf3 * level3_l;
+        outl += tempf4 * level4_l;
 
-        outr = inputs[IN1].getVoltage() * level1_r;
-        outr += inputs[IN2].getVoltage() * level2_r;
-        outr += inputs[IN3].getVoltage() * level3_r;
-        outr += inputs[IN4].getVoltage() * level4_r;
+        outr = tempf1 * level1_r;
+        outr += tempf2 * level2_r;
+        outr += tempf3 * level3_r;
+        outr += tempf4 * level4_r;
 
-        outl += inputs[SUBL].getVoltage();
-        outr += inputs[SUBR].getVoltage();
+        DSP_UTILS_DC_BLOCK(inputs[SUBL].getVoltage(), tempf1, sub_hist[0], sub_hist2[0]);
+        DSP_UTILS_DC_BLOCK(inputs[SUBR].getVoltage(), tempf2, sub_hist[1], sub_hist2[1]);
+
+        outl += tempf1;
+        outr += tempf2;
 
         outl *= master;
         outr *= master;
@@ -169,6 +182,14 @@ struct V102_Output_Mixer : Module {
 
         meter_outl = 0.0;
         meter_outr = 0.0;
+        for(int i = 0; i < 4; i ++) {
+            in_hist[i] = 0.0;
+            in_hist2[i] = 0.0;
+        }
+        for(int i = 0; i < 2; i ++) {
+            sub_hist[i] = 0.0;
+            sub_hist2[i] = 0.0;
+        }
         setParams();
     }
 
@@ -361,6 +382,47 @@ struct V102_Output_MixerWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 54.692)), module, V102_Output_Mixer::LED_METERL_M18));
 		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 54.692)), module, V102_Output_Mixer::LED_METERR_M18));
 	}
+
+    void appendContextMenu(Menu *menu) override {
+        V102_Output_Mixer *module = dynamic_cast<V102_Output_Mixer*>(this->module);
+        assert(module);
+
+        // add theme chooser
+        MenuLabel *spacerLabel = new MenuLabel();
+        menu->addChild(spacerLabel);
+
+        MenuLabel *themeLabel = new MenuLabel();
+        themeLabel->text = "Panel Theme";
+        menu->addChild(themeLabel);
+
+        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
+        lightItem->module = module;
+        menu->addChild(lightItem);
+
+        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
+        darkItem->module = module;
+        menu->addChild(darkItem);
+
+        menu->addChild(new MenuLabel());
+    }
+
+    // handle changes to the panel theme
+    struct PanelThemeItem : MenuItem {
+        V102_Output_Mixer *module;
+
+        void onAction(const event::Action &e) override {
+            module->module_defaults.darkTheme ^= 0x1;
+            saveDefaults(&module->module_defaults);
+        }
+    };
+
+    void step() override {
+        if(module) {
+            panel->visible = ((((V102_Output_Mixer*)module)->module_defaults.darkTheme) == 0);
+            darkPanel->visible  = ((((V102_Output_Mixer*)module)->module_defaults.darkTheme) == 1);
+        }
+        Widget::step();
+    }
 };
 
 Model* modelV102_Output_Mixer = createModel<V102_Output_Mixer, V102_Output_MixerWidget>("V102-Output_Mixer");
