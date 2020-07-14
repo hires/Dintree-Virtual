@@ -53,7 +53,7 @@
       "slug": "V103-Reverb_Delay",
       "name": "V103 Reverb Delay",
       "description": "Stereo Reverb and Delay Digital Effects Processor",
-      "manualUrl": "https://github.com/hires/Dintree-Virtual#V104-reverb-delay",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V103-reverb-delay",
       "tags": [
         "Delay",
         "Digital",
@@ -62,11 +62,5 @@
         "Reverb"
       ]
     },
-    {
-      "slug": "V102-Output_Mixer",
-      "name": "V102-Output_Mixer",
-      "description": "",
-      "tags": []
-    }
   ]
 }

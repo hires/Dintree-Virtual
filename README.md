@@ -68,16 +68,16 @@ Use the GATE IN jacks for gate signal inputs, and the ENV OUT jacks to get the
 envelope or LFO outputs. Other than sharing a panel the two channels are
 completely independent.
 
-####ADSR Mode
+#### ADSR Mode
 
 In ADSR mode the output works in a standard Attack, Decay, Sustain, Release mode.
 
-####AR Mode
+#### AR Mode
 
 In the AR mode a gate trigger starts the Attack / Release cycle which finishes
 at its own time.
 
-####LFO Mode
+#### LFO Mode
 
 In LFO mode the ATTACK and RELEASE controls affect the UP/DOWN time of the LFO
 wave. A small additional feature not included in the hardware version is the
@@ -85,7 +85,6 @@ ability to use the GATE IN jack to start and stop the LFO. When switching to LFO
 mode, the LFO will run automatically. However, if you input a gate signal, it
 will start and stop the LFO. To reset auto-run mode without a gate preset,
 simply switch the mode to another setting and back to LFO to reset it.
-
 
 ### V102 Output Mixer
 **Four Input Mixer with Pan Pots and Output Level Meter**
@@ -109,7 +108,7 @@ mix to a master reverb unit, for instance. If you bring the reverb back in via
 the SUB IN jacks, you will have an effects loop controlled only by the reverb
 module itself.
 
-### V103 Reverb / Delay
+### V103 Reverb Delay
 **Stereo Reverb and Delay Digital Effects Processor**
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V103-Reverb_Delay.png" />
