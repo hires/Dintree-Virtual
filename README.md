@@ -90,7 +90,7 @@ simply switch the mode to another setting and back to LFO to reset it.
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V102-Output_Mixer.png" />
 
-The V102 Output Mixer is a VCV clone of the [Dintree D102 Output Mixer](dintree.com/#D102)
+The V102 Output Mixer is a VCV clone of the [Dintree D102 Output Mixer](http://dintree.com/#D103)
 DIY module by Andrew Kilpatrick. You can use it to mix 4 sources including smooth
 level and pan controls for each input. There is a master output level and stereo
 level meter. The meter indicates in steps of 6dB. The 0dB indicator is at 5Vpk
@@ -106,3 +106,42 @@ affected by the level of the master control. These can be used for sending the
 mix to a master reverb unit, for instance. If you bring the reverb back in via
 the SUB IN jacks, you will have an effects loop controlled only by the reverb
 module itself.
+
+### V103 Reverb / Delay
+**Stereo Reverb and Delay Digital Effects Processor**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V103-Reverb_Delay.png" />
+
+The V102 Reverb Delay is a VCV clone of the [Dintree D103 Reverb / Delay](dintree.com)
+DIY module by Andrew Kilpatrick. It implements a simple yet effective reverb
+algorithm that sounds good on many kinds of sound sources. There is also an
+integrated delay line with up to 0.5 seconds of delay. There are three output
+modes which offer different mono and stereo taps for useful delay sounds. A clip
+LED indicates that the output signal might be too hot.
+
+Please note that the V103 is designed for use with an effects loop and not pass
+any dry signal.
+
+####Reverb Mix
+
+The REVERB MIX control affects the amount of reverb in the output.
+
+####Delay Mix
+
+The DELAY MIX control affects the amount of delayed signal in the output.
+
+####Delay Time
+
+The DELAY TIME control sets the total length of the delay line. From 0-500ms.
+
+####Delay Type
+
+The delay type switch chooses how the delayed signal is created:
+
+- **DEL1** - Mono delay output.
+- **DEL2** - Mono delay output plus stereo syncopated echos at 1/3 and 2/3 of the delay time.
+- **DEL3** - Mono delay output plus stereo syncopated echos in 1/4 and 3/4 of the delay time.
+
+####Reverb Type
+
+The reverb type switch selects one of two reverb sounds: BIG or SMALL.

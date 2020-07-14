@@ -26,6 +26,8 @@
 
 #define DSP_UTILS_ABS(x) ((x)<0 ? -(x) : (x))
 
+#define DSP_UTILS_MAX(x, y) ((x)>(y) ? (x) : (y))
+
 #define DSP_UTILS_CLAMP(x) (((x) > (1.0)) ? (1.0) : \
     (((x) < (-1.0)) ? (-1.0) : (x)))
 
