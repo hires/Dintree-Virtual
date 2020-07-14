@@ -91,7 +91,7 @@ simply switch the mode to another setting and back to LFO to reset it.
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V102-Output_Mixer.png" />
 
-The V102 Output Mixer is a VCV clone of the [Dintree D102 Output Mixer](http://dintree.com/#D103)
+The V102 Output Mixer is a VCV clone of the [Dintree D102 Output Mixer](http://dintree.com/#D102)
 DIY module by Andrew Kilpatrick. You can use it to mix 4 sources including smooth
 level and pan controls for each input. There is a master output level and stereo
 level meter. The meter indicates in steps of 6dB. The 0dB indicator is at 5Vpk
@@ -113,7 +113,7 @@ module itself.
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V103-Reverb_Delay.png" />
 
-The V102 Reverb Delay is a VCV clone of the [Dintree D103 Reverb / Delay](dintree.com)
+The V103 Reverb Delay is a VCV clone of the [Dintree D103 Reverb / Delay](http://dintree.com/#D103)
 DIY module by Andrew Kilpatrick. It implements a simple yet effective reverb
 algorithm that sounds good on many kinds of sound sources. There is also an
 integrated delay line with up to 0.5 seconds of delay. There are three output
