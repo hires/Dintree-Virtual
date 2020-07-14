@@ -120,10 +120,10 @@ struct V102_Output_Mixer : Module {
         }
 
         // HPF
-        DSP_UTILS_DC_BLOCK(inputs[IN1].getVoltage(), tempf1, in_hist[0], in_hist2[0]);
-        DSP_UTILS_DC_BLOCK(inputs[IN2].getVoltage(), tempf2, in_hist[1], in_hist2[1]);
-        DSP_UTILS_DC_BLOCK(inputs[IN3].getVoltage(), tempf3, in_hist[2], in_hist2[2]);
-        DSP_UTILS_DC_BLOCK(inputs[IN4].getVoltage(), tempf4, in_hist[3], in_hist2[3]);
+        DSP_UTILS_DCB(inputs[IN1].getVoltage(), tempf1, in_hist[0], in_hist2[0]);
+        DSP_UTILS_DCB(inputs[IN2].getVoltage(), tempf2, in_hist[1], in_hist2[1]);
+        DSP_UTILS_DCB(inputs[IN3].getVoltage(), tempf3, in_hist[2], in_hist2[2]);
+        DSP_UTILS_DCB(inputs[IN4].getVoltage(), tempf4, in_hist[3], in_hist2[3]);
 
         // channel mixing
         outl = tempf1 * level1_l;
@@ -141,8 +141,8 @@ struct V102_Output_Mixer : Module {
         outputs[PRE_OUTR].setVoltage(outr);
 
         // sub in
-        DSP_UTILS_DC_BLOCK(inputs[SUB_INL].getVoltage(), tempf1, sub_hist[0], sub_hist2[0]);
-        DSP_UTILS_DC_BLOCK(inputs[SUB_INR].getVoltage(), tempf2, sub_hist[1], sub_hist2[1]);
+        DSP_UTILS_DCB(inputs[SUB_INL].getVoltage(), tempf1, sub_hist[0], sub_hist2[0]);
+        DSP_UTILS_DCB(inputs[SUB_INR].getVoltage(), tempf2, sub_hist[1], sub_hist2[1]);
         outl += tempf1;
         outr += tempf2;
 
@@ -154,9 +154,9 @@ struct V102_Output_Mixer : Module {
         outputs[OUTR].setVoltage(outr);
 
         // meters
-        DSP_UTILS_LEVELMETER_MONO(DSP_UTILS_ABS(outl),
+        DSP_UTILS_LMM(DSP_UTILS_ABS(outl),
             meter_outl, METER_SMOOTHING);
-        DSP_UTILS_LEVELMETER_MONO(DSP_UTILS_ABS(outr),
+        DSP_UTILS_LMM(DSP_UTILS_ABS(outr),
             meter_outr, METER_SMOOTHING);
 	}
 
@@ -252,7 +252,7 @@ struct V102_Output_Mixer : Module {
         master *= 4.0;
 
         // meters
-        db = DSP_UTILS_FACTOR_TO_DB(DSP_UTILS_CLAMP_POS(meter_outl * 0.1)) + 7;
+        db = DSP_UTILS_F2DB(DSP_UTILS_CLAMP_POS(meter_outl * 0.1)) + 7;
         if(db > 6) {
             lights[LED_METERL_P6].setBrightness(1.0);
             lights[LED_METERL_0].setBrightness(1.0);
@@ -296,7 +296,7 @@ struct V102_Output_Mixer : Module {
             lights[LED_METERL_M18].setBrightness(0.0);
         }
 
-        db = DSP_UTILS_FACTOR_TO_DB(DSP_UTILS_CLAMP_POS(meter_outr * 0.1)) + 7;
+        db = DSP_UTILS_F2DB(DSP_UTILS_CLAMP_POS(meter_outr * 0.1)) + 7;
         if(db > 6) {
             lights[LED_METERR_P6].setBrightness(1.0);
             lights[LED_METERR_0].setBrightness(1.0);
