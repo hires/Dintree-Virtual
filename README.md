@@ -13,7 +13,7 @@ and his DIY and commercial music and audio projects.
 
 ## Modules
 
-### V100 Scanner
+[### V100 Scanner](#V100-scanner)
 **CV and voltage-control source sequencer / scanner**
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V100-Scanner.png" />
@@ -37,11 +37,11 @@ When the CTRL switch is down, clock mode is engaged. In this mode the CTRL IN
 jack will be read as a clock input. Each positive edge (>1V) will cause the
 input selector to increment by 1 step.
 
-#### CV Gain Control
+#### RANGE Control
 
-The CV GAIN control affects the range of outputs selected in either CV or clock
-mode. A range of 0-100% will select from 1 to 8 inputs to be included in the
-selection. For instance a setting of around 50% will cause only inputs 1-4 to
+The RANGE control affects the range of outputs selected in either CV or clock
+mode. Adjusting from 0-100% will select from 1 to 8 inputs to be included in
+the scan. For instance a setting of around 50% will cause only inputs 1-4 to
 be selected.
 
 #### RAND Control
@@ -49,3 +49,37 @@ be selected.
 When the RAND switch is on, instead of sequentially choosing inputs, either by
 CV or clock, a random input is selected. The RAND control observes the CV GAIN
 setting so only inputs within the chosen range will be selected.
+
+[### V101 Dual Envelope](#V101-dual_envelope)
+**Dual ADSR, AR and LFO Generator**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V101-Dual_Envelope.png" />
+
+The V101 Dual Envelope module is a VCV clone of the [Dintree D101 Dual Envelope](http://dintree.com/#D101)
+DIY module by Andrew Kilpatrick. You can use it as a simple ADSR, AR or LFO
+with controllable attack and release times. Because it's based on an old
+project based around a PIC16 microcontroller, the processing rate is only 1kHz
+and the resolution is only 12 bits, so you might hear some steps in the output.
+This is part of the clone and the charm! :)
+
+Use the GATE IN jacks for gate signal inputs, and the ENV OUT jacks to get the
+envelope or LFO outputs. Other than sharing a panel the two channels are
+completely independent.
+
+####ADSR Mode
+
+In ADSR mode the output works in a standard Attack, Decay, Sustain, Release mode.
+
+####AR Mode
+
+In the AR mode a gate trigger starts the Attack / Release cycle which finishes
+at its own time.
+
+####LFO Mode
+
+In LFO mode the ATTACK and RELEASE controls affect the UP/DOWN time of the LFO
+wave. A small additional feature not included in the hardware version is the
+ability to use the GATE IN jack to start and stop the LFO. When switching to LFO
+mode, the LFO will run automatically. However, if you input a gate signal, it
+will start and stop the LFO. To reset auto-run mode without a gate preset,
+simply switch the mode to another setting and back to LFO to reset it.

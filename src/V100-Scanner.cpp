@@ -26,7 +26,7 @@
 // Dintree V100 Scanner module
 struct V100_Scanner : Module {
 	enum ParamIds {
-		CV_GAIN,
+		RANGE,
         RAND_SW,
         CV_SW,
 		NUM_PARAMS
@@ -64,13 +64,13 @@ struct V100_Scanner : Module {
 		OUTB_LED,
 		NUM_LIGHTS
 	};
-
     enum {
         MODE_CV,
         MODE_CLOCK
     };
     #define CLOCK_THRESH_HI 1.01
     #define CLOCK_THRESH_LO 0.99
+    #define RT_TASK_RATE 100.0
 
     dsp::ClockDivider taskTimer;
     int chan_a, chan_b, old_chan;
@@ -81,7 +81,7 @@ struct V100_Scanner : Module {
     // constructor
 	V100_Scanner() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(CV_GAIN, 0.f, 1.f, 0.f, "");
+		configParam(RANGE, 0.f, 1.f, 0.f, "");
 
         // load module defaults from user file
         loadDefaults(&module_defaults);
@@ -113,13 +113,13 @@ struct V100_Scanner : Module {
 
     // samplerate changed
     void onSampleRateChange(void) override {
-        taskTimer.setDivision((int)(APP->engine->getSampleRate() / 100.0));
+        taskTimer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
     }
 
     // module initialize
     void onReset(void) override {
         random::init();
-        params[CV_GAIN].setValue(1.0);
+        params[RANGE].setValue(1.0);
     }
 
     // module randomize
@@ -140,7 +140,7 @@ struct V100_Scanner : Module {
     // set params based on input
     void setParams(void) {
         int i;
-        float gain;
+        float range;
 
         // get random switch
         if(params[RAND_SW].getValue() > 0.5) {
@@ -162,15 +162,15 @@ struct V100_Scanner : Module {
             mode = MODE_CLOCK;
         }
 
-        // gain control
-        gain = params[CV_GAIN].getValue() * 7.999;
+        // range control
+        range = params[RANGE].getValue() * 7.999;
 
         // process CV input
         if(mode == MODE_CV) {
-            chan_a = clamp((int)(inputs[CTRL_IN].getVoltage() * 0.1 * gain), 0, 7);
+            chan_a = clamp((int)(inputs[CTRL_IN].getVoltage() * 0.1 * range), 0, 7);
             lights[CTRL_LED].setBrightness(clamp(inputs[CTRL_IN].getVoltage() * 0.1, 0.0f, 1.0f));
             if(random && old_chan != chan_a) {
-                chan_a = random::u32() % ((int)gain + 1);
+                chan_a = random::u32() % ((int)range + 1);
             }
         }
         // process clock input
@@ -183,11 +183,11 @@ struct V100_Scanner : Module {
             else if(!clk_state && inputs[CTRL_IN].getVoltage() > CLOCK_THRESH_HI) {
                 clk_state = 1;
                 if(random) {
-                    chan_a = random::u32() % ((int)gain + 1);
+                    chan_a = random::u32() % ((int)range + 1);
                 }
                 else {
                     chan_a ++;
-                    if(chan_a > (int)gain) {
+                    if(chan_a > (int)range) {
                         chan_a = 0;
                     }
                 }
@@ -229,7 +229,7 @@ struct V100_ScannerWidget : ModuleWidget {
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::CV_GAIN));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::RANGE));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 19.792)), module, V100_Scanner::IN1));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 32.492)), module, V100_Scanner::IN2));
@@ -258,8 +258,8 @@ struct V100_ScannerWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 108.692)), module, V100_Scanner::IN8_LED));
 		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 108.692)), module, V100_Scanner::OUTB_LED));
 
-        addParam(createParamCentered<DintreeToggleSPDT>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
-        addParam(createParamCentered<DintreeToggleSPDT>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
+        addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
+        addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
 	}
 
     void appendContextMenu(Menu *menu) override {
@@ -297,8 +297,6 @@ struct V100_ScannerWidget : ModuleWidget {
 
     void step() override {
         if(module) {
-//            panel->visible = ((((V100_Scanner*)module)->dark_theme) == 0);
-//            darkPanel->visible  = ((((V100_Scanner*)module)->dark_theme) == 1);
             panel->visible = ((((V100_Scanner*)module)->module_defaults.darkTheme) == 0);
             darkPanel->visible  = ((((V100_Scanner*)module)->module_defaults.darkTheme) == 1);
         }

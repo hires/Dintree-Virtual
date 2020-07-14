@@ -25,10 +25,38 @@
 using namespace rack;
 
 // SPDT switch
-struct DintreeToggleSPDT : SvgSwitch {
-    DintreeToggleSPDT() {
+struct DintreeToggle2P : SvgSwitch {
+    DintreeToggle2P() {
         addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-down.svg")));
         addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-up.svg")));
+    }
+};
+
+// SP3T switch
+struct DintreeToggle3P : SvgSwitch {
+
+    DintreeToggle3P() {
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-down.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-middle.svg")));
+        addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/components/toggle-up.svg")));
+    }
+
+	// handle the manually entered values
+	void onChange(const event::Change &e) override {
+		SvgSwitch::onChange(e);
+    }
+
+    void randomize() override {
+        SvgSwitch::randomize();
+        if(paramQuantity->getValue() > 1.33f) {
+            paramQuantity->setValue(2.0f);
+        }
+        else if(paramQuantity->getValue() > 0.67f) {
+            paramQuantity->setValue(1.0f);
+        }
+        else {
+            paramQuantity->setValue(0.0f);
+        }
     }
 };
 
