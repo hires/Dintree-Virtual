@@ -123,19 +123,19 @@ LED indicates that the output signal might be too hot.
 Please note that the V103 is designed for use with an effects loop and not pass
 any dry signal.
 
-####Reverb Mix
+#### Reverb Mix
 
 The REVERB MIX control affects the amount of reverb in the output.
 
-####Delay Mix
+#### Delay Mix
 
 The DELAY MIX control affects the amount of delayed signal in the output.
 
-####Delay Time
+#### Delay Time
 
 The DELAY TIME control sets the total length of the delay line. From 0-500ms.
 
-####Delay Type
+#### Delay Type
 
 The delay type switch chooses how the delayed signal is created:
 
@@ -143,6 +143,6 @@ The delay type switch chooses how the delayed signal is created:
 - **DEL2** - Mono delay output plus stereo syncopated echos at 1/3 and 2/3 of the delay time.
 - **DEL3** - Mono delay output plus stereo syncopated echos in 1/4 and 3/4 of the delay time.
 
-####Reverb Type
+#### Reverb Type
 
 The reverb type switch selects one of two reverb sounds: BIG or SMALL.
