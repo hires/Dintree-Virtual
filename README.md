@@ -13,7 +13,7 @@ and his DIY and commercial music and audio projects.
 
 ## Modules
 
-[### V100 Scanner](#V100-scanner)
+### V100 Scanner
 **CV and voltage-control source sequencer / scanner**
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V100-Scanner.png" />
@@ -50,7 +50,7 @@ When the RAND switch is on, instead of sequentially choosing inputs, either by
 CV or clock, a random input is selected. The RAND control observes the CV GAIN
 setting so only inputs within the chosen range will be selected.
 
-[### V101 Dual Envelope](#V101-dual_envelope)
+### V101 Dual Envelope
 **Dual ADSR, AR and LFO Generator**
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V101-Dual_Envelope.png" />
