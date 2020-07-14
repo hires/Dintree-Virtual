@@ -61,6 +61,12 @@
         "Hardware",
         "Reverb"
       ]
+    },
+    {
+      "slug": "V102-Output_Mixer",
+      "name": "V102-Output_Mixer",
+      "description": "",
+      "tags": []
     }
   ]
 }

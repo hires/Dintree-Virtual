@@ -41,13 +41,15 @@ struct V102_Output_Mixer : Module {
 		IN2,
 		IN3,
 		IN4,
-		SUBL,
-		SUBR,
+		SUB_INL,
+		SUB_INR,
 		NUM_INPUTS
 	};
 	enum OutputIds {
 		OUTL,
 		OUTR,
+        PRE_OUTL,
+        PRE_OUTR,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -117,12 +119,13 @@ struct V102_Output_Mixer : Module {
             setParams();
         }
 
+        // HPF
         DSP_UTILS_DC_BLOCK(inputs[IN1].getVoltage(), tempf1, in_hist[0], in_hist2[0]);
         DSP_UTILS_DC_BLOCK(inputs[IN2].getVoltage(), tempf2, in_hist[1], in_hist2[1]);
         DSP_UTILS_DC_BLOCK(inputs[IN3].getVoltage(), tempf3, in_hist[2], in_hist2[2]);
         DSP_UTILS_DC_BLOCK(inputs[IN4].getVoltage(), tempf4, in_hist[3], in_hist2[3]);
 
-        // mixing
+        // channel mixing
         outl = tempf1 * level1_l;
         outl += tempf2 * level2_l;
         outl += tempf3 * level3_l;
@@ -133,22 +136,28 @@ struct V102_Output_Mixer : Module {
         outr += tempf3 * level3_r;
         outr += tempf4 * level4_r;
 
-        DSP_UTILS_DC_BLOCK(inputs[SUBL].getVoltage(), tempf1, sub_hist[0], sub_hist2[0]);
-        DSP_UTILS_DC_BLOCK(inputs[SUBR].getVoltage(), tempf2, sub_hist[1], sub_hist2[1]);
+        // pre out
+        outputs[PRE_OUTL].setVoltage(outl);
+        outputs[PRE_OUTR].setVoltage(outr);
 
+        // sub in
+        DSP_UTILS_DC_BLOCK(inputs[SUB_INL].getVoltage(), tempf1, sub_hist[0], sub_hist2[0]);
+        DSP_UTILS_DC_BLOCK(inputs[SUB_INR].getVoltage(), tempf2, sub_hist[1], sub_hist2[1]);
         outl += tempf1;
         outr += tempf2;
 
         outl *= master;
         outr *= master;
 
+        // output
+        outputs[OUTL].setVoltage(outl);
+        outputs[OUTR].setVoltage(outr);
+
+        // meters
         DSP_UTILS_LEVELMETER_MONO(DSP_UTILS_ABS(outl),
             meter_outl, METER_SMOOTHING);
         DSP_UTILS_LEVELMETER_MONO(DSP_UTILS_ABS(outr),
             meter_outr, METER_SMOOTHING);
-
-        outputs[OUTL].setVoltage(outl);
-        outputs[OUTR].setVoltage(outr);
 	}
 
     // samplerate changed
@@ -365,11 +374,13 @@ struct V102_Output_MixerWidget : ModuleWidget {
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 57.571)), module, V102_Output_Mixer::IN2));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 70.906)), module, V102_Output_Mixer::IN3));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 84.262)), module, V102_Output_Mixer::IN4));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 97.575)), module, V102_Output_Mixer::SUBL));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 110.932)), module, V102_Output_Mixer::SUBR));
+		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 97.575)), module, V102_Output_Mixer::SUB_INL));
+		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 110.932)), module, V102_Output_Mixer::SUB_INR));
 
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(69.193, 104.244)), module, V102_Output_Mixer::OUTL));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 104.244)), module, V102_Output_Mixer::OUTR));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(69.193, 97.575)), module, V102_Output_Mixer::OUTL));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 97.575)), module, V102_Output_Mixer::OUTR));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(69.193, 110.932)), module, V102_Output_Mixer::PRE_OUTL));
+		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 110.932)), module, V102_Output_Mixer::PRE_OUTR));
 
 		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(72.051, 24.255)), module, V102_Output_Mixer::LED_METERL_P6));
 		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(79.692, 24.255)), module, V102_Output_Mixer::LED_METERR_P6));

@@ -93,6 +93,16 @@ simply switch the mode to another setting and back to LFO to reset it.
 The V102 Output Mixer is a VCV clone of the [Dintree D102 Output Mixer](dintree.com/#D102)
 DIY module by Andrew Kilpatrick. You can use it to mix 4 sources including smooth
 level and pan controls for each input. There is a master output level and stereo
-level meter. Unlike the hardware version, the V102 also includes sub inputs which
-feed into the master mix bus. This can be used as a convenient effects return or
-as a way to daisy-chain multiple mixers together.
+level meter. The meter indicates in steps of 6dB. The 0dB indicator is at 5Vpk
+(10Vpp) which is considered the nominal level for most audio signals in Eurorack.
+
+**VCV-only Features!**
+Unlike the hardware version, the V102 also includes SUB INs jacks which feed
+into the master mix bus. These can be used as a convenient effects return or as
+a way to daisy-chain multiple mixers together.
+
+Also included are the PRE OUT jacks which gives the pre-master mix and are not
+affected by the level of the master control. These can be used for sending the
+mix to a master reverb unit, for instance. If you bring the reverb back in via
+the SUB IN jacks, you will have an effects loop controlled only by the reverb
+module itself.
