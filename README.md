@@ -83,3 +83,16 @@ ability to use the GATE IN jack to start and stop the LFO. When switching to LFO
 mode, the LFO will run automatically. However, if you input a gate signal, it
 will start and stop the LFO. To reset auto-run mode without a gate preset,
 simply switch the mode to another setting and back to LFO to reset it.
+
+
+### V102 Output Mixer
+**Four Input Mixer with Pan Pots and Output Level Meter**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V102-Output_Mixer.png" />
+
+The V102 Output Mixer is a VCV clone of the [Dintree D102 Output Mixer](dintree.com/#D102)
+DIY module by Andrew Kilpatrick. You can use it to mix 4 sources including smooth
+level and pan controls for each input. There is a master output level and stereo
+level meter. Unlike the hardware version, the V102 also includes sub inputs which
+feed into the master mix bus. This can be used as a convenient effects return or
+as a way to daisy-chain multiple mixers together.
