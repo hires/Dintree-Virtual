@@ -112,6 +112,26 @@ mix to a master reverb unit, for instance. If you bring the reverb back in via
 the SUB IN jacks, you will have an effects loop controlled only by the reverb
 module itself.
 
+#### LEVEL Controls
+
+The LEVEL controls affect the level of the input signal before it reaches the
+pan pot. The control offers enough gain so that a mid-range setting is probably
+best in most cases.
+
+#### PAN Controls
+
+The PAN controls alter the relative balance of the signal from an input into
+the left and right mix busses. In the centre both channels are the same level.
+Turning to an extreme end will cause about a 6dB boost in that output channel
+and the other channel will go all the way to zero.
+
+#### MASTER Control
+
+The MASTER control affects the master output jacks. A midrange setting is
+probably best in most cases. You can use the levelmeters to get a sense of the
+overall output level. Aiming for around 0dB will ensure you drive the next
+module with a decent level.
+
 ----
 
 ### V103 Reverb Delay
@@ -153,11 +173,6 @@ The delay type switch chooses how the delayed signal is created:
 
 The reverb type switch selects one of two reverb sounds: BIG or SMALL.
 
-
-
-
-
-
 ----
 
 ### V104 Four Vs
@@ -172,6 +187,26 @@ to operate. Unlike the hardware version, this module produces a bi-polar voltage
 which is probably more useful. Also unlike the hardware version, the V104 has
 on/off switches on the first two outputs. This lets you toggle on and off a
 preset voltage.
+
+#### VOLTAGE Controls
+
+Each output has a dedicated voltage control. In the middle the output will be
+about zero volts. By turning counter-clockwise you can create as much as -5V,
+and by turning fully clockwise you can create as much as +5V. Manual control like
+this is super useful for testing the range of voltages a module can handle as well
+as manually adjusting some simpler modules that have input jacks to trigger
+functions but no actual panel knobs or buttons to do it manually.
+
+#### ON Switches
+
+As an added bonus the first two channels feature ON switches which can be used
+to turn on and off an output. If you want to test a particular voltage and then
+try adding and removing that voltage, you can use the ON switch to do this
+while leaving the voltage setting preset on the VOLTAGE control.
+
+This can be used to manually generate gates or pulses that are easy to control
+with the mouse.
+
 
 ----
 
