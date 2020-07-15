@@ -52,6 +52,8 @@ When the RAND switch is on, instead of sequentially choosing inputs, either by
 CV or clock, a random input is selected. The RAND control observes the CV GAIN
 setting so only inputs within the chosen range will be selected.
 
+----
+
 ### V101 Dual Envelope
 **Dual ADSR, AR and LFO Generator**
 
@@ -86,6 +88,8 @@ mode, the LFO will run automatically. However, if you input a gate signal, it
 will start and stop the LFO. To reset auto-run mode without a gate preset,
 simply switch the mode to another setting and back to LFO to reset it.
 
+----
+
 ### V102 Output Mixer
 **Four Input Mixer with Pan Pots and Output Level Meter**
 
@@ -107,6 +111,8 @@ affected by the level of the master control. These can be used for sending the
 mix to a master reverb unit, for instance. If you bring the reverb back in via
 the SUB IN jacks, you will have an effects loop controlled only by the reverb
 module itself.
+
+----
 
 ### V103 Reverb Delay
 **Stereo Reverb and Delay Digital Effects Processor**
@@ -147,6 +153,8 @@ The delay type switch chooses how the delayed signal is created:
 
 The reverb type switch selects one of two reverb sounds: BIG or SMALL.
 
+----
+
 ### V104 Four Vs
 **Four Channel Voltage Source**
 
@@ -159,6 +167,8 @@ to operate. Unlike the hardware version, this module produces a bi-polar voltage
 which is probably more useful. Also unlike the hardware version, the V104 has
 on/off switches on the first two outputs. This lets you toggle on and off a
 preset voltage.
+
+----
 
 ### V105 Quad CV Proc
 **Quad Control Voltage Processor**
