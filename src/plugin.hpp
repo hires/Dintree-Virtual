@@ -35,6 +35,7 @@ extern Model* modelV102_Output_Mixer;
 extern Model* modelV103_Reverb_Delay;
 extern Model* modelV104_Four_Vs;
 extern Model* modelV105_Quad_CV_Proc;
+extern Model* modelV107_Dual_Slew;
 
 // defaults for modules that users can store
 struct ModuleDefaults {

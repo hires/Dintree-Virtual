@@ -248,3 +248,28 @@ way to adjust gain and invert a signal. By using both outputs at the same time
 you can easily make opposing CV signals for such things as panning circuits,
 stereo phasing effects, or multiple filters which cross over for unique timbral
 characteristics.
+
+----
+
+### V107 Dual Slew
+**Dual Slew Rate Limiter**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V107-Dual_Slew.png" />
+
+The V107 Dual Slew is a VCV clone of the [Dintree D107 Dual Slew](http://dintree.com/#D107)
+DIY module by Andrew Kilpatrick. It simulates a basic RC filter slew rate limiter
+which in the hardware version is based around a large variable resistor feeding a
+pair of back to back electrolytic capacitors. The output of the RC junction is
+sampled and buffered by a TL082 JFET input op amp which provides nearly zero
+current draw. This means that the output signal lags the input by an amount that
+is based solely on how fast the capacitors can be charged and discharged via the
+variable resistor. A low impedance source is used internally so that the particular
+signal fed into the module makes no difference. (in VCV rack of course this is
+arbitrary since inputs don't load down cables... but anyway...)
+
+The most common use of a slew rate limiter is for use in portamento by feeding
+a control voltage through the slew unit and then into a VCO pitch CV input. But
+because a simple RC filter has a log curve the pitch will not track evenly per
+octave when used with a V/oct type of CV signal. Another use is for making a
+simple lag processor to convert a single CV into multiple versions that have
+slightly different offsets. This can create interesting effects with filters.
