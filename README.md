@@ -207,7 +207,6 @@ while leaving the voltage setting preset on the VOLTAGE control.
 This can be used to manually generate gates or pulses that are easy to control
 with the mouse.
 
-
 ----
 
 ### V105 Quad CV Proc
@@ -222,3 +221,30 @@ Two inputs on each channel are buffered and mixed together. The gain control
 allows the final output to be set from 0x to 2x, offering both attenuation
 and gain. Dual outputs from each section offer non-inverted (+) and inverted (-)
 outputs.
+
+#### Dual Inputs
+
+Each of the four channels contain two inputs labeled A and B. You can feed two
+signals and they will be actively buffered and mixed together before being sent
+to the GAIN control. Use this as a basic signal mixer for CV or audio signals.
+
+#### GAIN Controls
+
+Each channel features a GAIN control which is wired after the two inputs are
+mixed together. The GAIN controls are marked with the gain range from 0x to 2x.
+At the full counter-clockwise position the output signal will be zero. At the
+mid-range position the signal will be passed through unaltered. At the full
+setting the signal will be doubled in amplitude. (200% or +6dB) Use this to
+bring up weak signals or adjust the range of a signal into a module that lacks
+any kind of input attenuator.
+
+#### Dual Outputs
+
+Once gained up or down, the signal is fed into a pair of outputs. The + output
+carries a non-inverting signal. With the GAIN control set to mid-range, this
+jack will create a perfect copy of the input. The - output carries an inverted
+version of the signal. Use this instead of an "attenuverter" which is a clumsy
+way to adjust gain and invert a signal. By using both outputs at the same time
+you can easily make opposing CV signals for such things as panning circuits,
+stereo phasing effects, or multiple filters which cross over for unique timbral
+characteristics.
