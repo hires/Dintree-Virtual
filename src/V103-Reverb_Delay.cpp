@@ -19,32 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Dintree-Virtual.  If not, see <http://www.gnu.org/licenses/>.
  *
- */#include "plugin.hpp"
+ */
+#include "plugin.hpp"
 #include "utils/dsp_utils.h"
 
 struct V103_Reverb_Delay : Module {
-	enum ParamIds {
+    enum ParamIds {
         POT_REV_MIX,
         POT_DEL_MIX,
         POT_DEL_TIME,
         DEL_SW,
         REV_SW,
         NUM_PARAMS
-	};
-	enum InputIds {
+    };
+    enum InputIds {
         INL,
         INR,
         NUM_INPUTS
-	};
-	enum OutputIds {
+    };
+    enum OutputIds {
         OUTL,
         OUTR,
         NUM_OUTPUTS
-	};
-	enum LightIds {
+    };
+    enum LightIds {
         CLIP_LED,
         NUM_LIGHTS
-	};
+    };
     enum {
         REV_COEFF_API1,
         REV_COEFF_API2,
@@ -124,7 +125,7 @@ struct V103_Reverb_Delay : Module {
         onReset();
         onSampleRateChange();
         setParams();
-	}
+    }
 
     // process a sample
     void process(const ProcessArgs& args) override {
@@ -205,7 +206,7 @@ struct V103_Reverb_Delay : Module {
 
         outputs[OUTL].setVoltage(outl);
         outputs[OUTR].setVoltage(outr);
-	}
+    }
 
     // samplerate changed
     void onSampleRateChange(void) override {
@@ -463,7 +464,7 @@ struct V103_Reverb_Delay : Module {
 struct V103_Reverb_DelayWidget : ModuleWidget {
     SvgPanel* darkPanel;
 
-	V103_Reverb_DelayWidget(V103_Reverb_Delay* module) {
+    V103_Reverb_DelayWidget(V103_Reverb_Delay* module) {
         setModule(module);
         setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg")));
 
@@ -491,7 +492,7 @@ struct V103_Reverb_DelayWidget : ModuleWidget {
 
         addChild(createParamCentered<DintreeToggle3P>(mm2px(Vec(19.982, 99.798)), module, V103_Reverb_Delay::DEL_SW));
         addChild(createParamCentered<DintreeToggle2P>(mm2px(Vec(32.682, 99.798)), module, V103_Reverb_Delay::REV_SW));
-	}
+    }
 
     void appendContextMenu(Menu *menu) override {
         V103_Reverb_Delay *module = dynamic_cast<V103_Reverb_Delay*>(this->module);
