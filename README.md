@@ -153,6 +153,11 @@ The delay type switch chooses how the delayed signal is created:
 
 The reverb type switch selects one of two reverb sounds: BIG or SMALL.
 
+
+
+
+
+
 ----
 
 ### V104 Four Vs
