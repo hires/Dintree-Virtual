@@ -1,5 +1,5 @@
 /*
- * Dintree V100 Scanner
+ * Dintree GUI Components
  *
  * Written by: Andrew Kilpatrick
  * Copyright 2020: Andrew Kilpatrick
