@@ -146,3 +146,16 @@ The delay type switch chooses how the delayed signal is created:
 #### Reverb Type
 
 The reverb type switch selects one of two reverb sounds: BIG or SMALL.
+
+### V104 Four Vs
+**Four Channel Voltage Source**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V104-Four_Vs.png" />
+
+The V104 is a VCV clone of the [Dintree D104 Four Vs](http://dintree.com/#D104)
+DIY module by Andrew Kilpatrick. It just produces four different voltages but
+can be used for testing and triggering modules that require a voltage present
+to operate. Unlike the hardware version, this module produces a bi-polar voltage
+which is probably more useful. Also unlike the hardware version, the V104 has
+on/off switches on the first two outputs. This lets you toggle on and off a
+preset voltage.

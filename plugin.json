@@ -62,5 +62,17 @@
         "Reverb"
       ]
     },
+    {
+      "slug": "V104-Four_Vs",
+      "name": "V104 Four Vs",
+      "description": "Four Channel Voltage Source",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V104-four_vs",
+      "tags": [
+        "Controller",
+        "Hardware",
+        "Quad",
+        "Utility"
+      ]
+    }
   ]
 }

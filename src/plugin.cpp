@@ -11,6 +11,7 @@ void init(Plugin* p) {
     p->addModel(modelV101_Dual_Envelope);
     p->addModel(modelV102_Output_Mixer);
     p->addModel(modelV103_Reverb_Delay);
+    p->addModel(modelV104_Four_Vs);
 
 	// Any other plugin initialization may go here.
 	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.
