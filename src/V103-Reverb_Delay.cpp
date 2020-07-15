@@ -24,26 +24,26 @@
 
 struct V103_Reverb_Delay : Module {
 	enum ParamIds {
-		POT_REV_MIX,
-		POT_DEL_MIX,
-		POT_DEL_TIME,
+        POT_REV_MIX,
+        POT_DEL_MIX,
+        POT_DEL_TIME,
         DEL_SW,
         REV_SW,
-		NUM_PARAMS
+        NUM_PARAMS
 	};
 	enum InputIds {
-		INL,
-		INR,
-		NUM_INPUTS
+        INL,
+        INR,
+        NUM_INPUTS
 	};
 	enum OutputIds {
-		OUTL,
-		OUTR,
-		NUM_OUTPUTS
+        OUTL,
+        OUTR,
+        NUM_OUTPUTS
 	};
 	enum LightIds {
-		CLIP_LED,
-		NUM_LIGHTS
+        CLIP_LED,
+        NUM_LIGHTS
 	};
     enum {
         REV_COEFF_API1,
@@ -113,10 +113,10 @@ struct V103_Reverb_Delay : Module {
     int del_lp_z1;
 
     V103_Reverb_Delay() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(POT_REV_MIX, 0.f, 1.f, 0.f, "REVERB MIX");
-		configParam(POT_DEL_MIX, 0.f, 1.f, 0.f, "DELAY MIX");
-		configParam(POT_DEL_TIME, 0.f, 1.f, 0.f, "DELAY TIME");
+        config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+        configParam(POT_REV_MIX, 0.f, 1.f, 0.f, "REVERB MIX");
+        configParam(POT_DEL_MIX, 0.f, 1.f, 0.f, "DELAY MIX");
+        configParam(POT_DEL_TIME, 0.f, 1.f, 0.f, "DELAY TIME");
         configParam(DEL_SW, 0.0f, 2.0f, 0.0f, "DELAY TYPE");
         configParam(REV_SW, 0.0f, 1.0f, 0.0f, "REVERB_TYPE");
 
@@ -464,33 +464,33 @@ struct V103_Reverb_DelayWidget : ModuleWidget {
     SvgPanel* darkPanel;
 
 	V103_Reverb_DelayWidget(V103_Reverb_Delay* module) {
-		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg")));
+        setModule(module);
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg")));
 
         darkPanel = new SvgPanel();
         darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay-dark.svg")));
         darkPanel->visible = false;
         addChild(darkPanel);
 
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 24.233)), module, V103_Reverb_Delay::POT_REV_MIX));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 50.924)), module, V103_Reverb_Delay::POT_DEL_MIX));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 77.594)), module, V103_Reverb_Delay::POT_DEL_TIME));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 24.233)), module, V103_Reverb_Delay::POT_REV_MIX));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 50.924)), module, V103_Reverb_Delay::POT_DEL_MIX));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 77.594)), module, V103_Reverb_Delay::POT_DEL_TIME));
 
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.324, 41.081)), module, V103_Reverb_Delay::INL));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.324, 55.475)), module, V103_Reverb_Delay::INR));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.324, 41.081)), module, V103_Reverb_Delay::INL));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.324, 55.475)), module, V103_Reverb_Delay::INR));
 
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(11.303, 69.868)), module, V103_Reverb_Delay::OUTL));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(11.303, 85.32)), module, V103_Reverb_Delay::OUTR));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(11.303, 69.868)), module, V103_Reverb_Delay::OUTL));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(11.303, 85.32)), module, V103_Reverb_Delay::OUTR));
 
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(11.324, 30.159)), module, V103_Reverb_Delay::CLIP_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(11.324, 30.159)), module, V103_Reverb_Delay::CLIP_LED));
 
-		addChild(createParamCentered<DintreeToggle3P>(mm2px(Vec(19.982, 99.798)), module, V103_Reverb_Delay::DEL_SW));
-		addChild(createParamCentered<DintreeToggle2P>(mm2px(Vec(32.682, 99.798)), module, V103_Reverb_Delay::REV_SW));
+        addChild(createParamCentered<DintreeToggle3P>(mm2px(Vec(19.982, 99.798)), module, V103_Reverb_Delay::DEL_SW));
+        addChild(createParamCentered<DintreeToggle2P>(mm2px(Vec(32.682, 99.798)), module, V103_Reverb_Delay::REV_SW));
 	}
 
     void appendContextMenu(Menu *menu) override {
