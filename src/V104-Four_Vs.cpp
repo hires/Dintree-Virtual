@@ -19,31 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Dintree-Virtual.  If not, see <http://www.gnu.org/licenses/>.
  *
- */#include "plugin.hpp"
+ */
+#include "plugin.hpp"
 
 struct V104_Four_Vs : Module {
-	enum ParamIds {
-		POT_VOLTAGE1,
-		POT_VOLTAGE2,
-		POT_VOLTAGE3,
-		POT_VOLTAGE4,
+    enum ParamIds {
+        POT_VOLTAGE1,
+        POT_VOLTAGE2,
+        POT_VOLTAGE3,
+        POT_VOLTAGE4,
         ON1_SW,
         ON2_SW,
-		NUM_PARAMS
-	};
-	enum InputIds {
-		NUM_INPUTS
-	};
-	enum OutputIds {
-		OUT1,
-		OUT2,
-		OUT3,
-		OUT4,
-		NUM_OUTPUTS
-	};
-	enum LightIds {
-		NUM_LIGHTS
-	};
+        NUM_PARAMS
+    };
+    enum InputIds {
+        NUM_INPUTS
+    };
+    enum OutputIds {
+        OUT1,
+        OUT2,
+        OUT3,
+        OUT4,
+        NUM_OUTPUTS
+    };
+    enum LightIds {
+        NUM_LIGHTS
+    };
 
     // settings
     #define RT_TASK_RATE 1000.0  // Hz
@@ -56,12 +57,12 @@ struct V104_Four_Vs : Module {
     float voltage3;
     float voltage4;
 
-	V104_Four_Vs() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(POT_VOLTAGE1, 0.f, 1.f, 0.f, "VOLTAGE 1");
-		configParam(POT_VOLTAGE2, 0.f, 1.f, 0.f, "VOLTAGE 2");
-		configParam(POT_VOLTAGE3, 0.f, 1.f, 0.f, "VOLTAGE 3");
-		configParam(POT_VOLTAGE4, 0.f, 1.f, 0.f, "VOLTAGE 4");
+    V104_Four_Vs() {
+        config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+        configParam(POT_VOLTAGE1, 0.f, 1.f, 0.f, "VOLTAGE 1");
+        configParam(POT_VOLTAGE2, 0.f, 1.f, 0.f, "VOLTAGE 2");
+        configParam(POT_VOLTAGE3, 0.f, 1.f, 0.f, "VOLTAGE 3");
+        configParam(POT_VOLTAGE4, 0.f, 1.f, 0.f, "VOLTAGE 4");
 
         // load module defaults from user file
         loadDefaults(&module_defaults);
@@ -69,10 +70,10 @@ struct V104_Four_Vs : Module {
         // reset stuff
         onReset();
         onSampleRateChange();
-	}
+    }
 
     // process a sample
-	void process(const ProcessArgs& args) override {
+    void process(const ProcessArgs& args) override {
         // state
         if(taskTimer.process()) {
             setParams();
@@ -81,7 +82,7 @@ struct V104_Four_Vs : Module {
         outputs[OUT2].setVoltage(voltage2);
         outputs[OUT3].setVoltage(voltage3);
         outputs[OUT4].setVoltage(voltage4);
-	}
+    }
 
     // samplerate changed
     void onSampleRateChange(void) override {
@@ -135,33 +136,33 @@ struct V104_Four_Vs : Module {
 struct V104_Four_VsWidget : ModuleWidget {
     SvgPanel* darkPanel;
 
-	V104_Four_VsWidget(V104_Four_Vs* module) {
-		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V104-Four_Vs.svg")));
+    V104_Four_VsWidget(V104_Four_Vs* module) {
+        setModule(module);
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V104-Four_Vs.svg")));
 
         darkPanel = new SvgPanel();
         darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V104-Four_Vs-dark.svg")));
         darkPanel->visible = false;
         addChild(darkPanel);
 
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.601, 24.233)), module, V104_Four_Vs::POT_VOLTAGE1));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.58, 50.882)), module, V104_Four_Vs::POT_VOLTAGE2));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.602, 77.594)), module, V104_Four_Vs::POT_VOLTAGE3));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.602, 104.222)), module, V104_Four_Vs::POT_VOLTAGE4));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.601, 24.233)), module, V104_Four_Vs::POT_VOLTAGE1));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.58, 50.882)), module, V104_Four_Vs::POT_VOLTAGE2));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.602, 77.594)), module, V104_Four_Vs::POT_VOLTAGE3));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.602, 104.222)), module, V104_Four_Vs::POT_VOLTAGE4));
 
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 70.884)), module, V104_Four_Vs::OUT1));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 84.219)), module, V104_Four_Vs::OUT2));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 97.661)), module, V104_Four_Vs::OUT3));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 110.996)), module, V104_Four_Vs::OUT4));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 70.884)), module, V104_Four_Vs::OUT1));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 84.219)), module, V104_Four_Vs::OUT2));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 97.661)), module, V104_Four_Vs::OUT3));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.362, 110.996)), module, V104_Four_Vs::OUT4));
 
-		addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(12.345, 24.233)), module, V104_Four_Vs::ON1_SW));
-		addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(12.345, 50.903)), module, V104_Four_Vs::ON2_SW));
-	}
+        addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(12.345, 24.233)), module, V104_Four_Vs::ON1_SW));
+        addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(12.345, 50.903)), module, V104_Four_Vs::ON2_SW));
+    }
 
     void appendContextMenu(Menu *menu) override {
         V104_Four_Vs *module = dynamic_cast<V104_Four_Vs*>(this->module);

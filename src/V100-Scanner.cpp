@@ -32,7 +32,7 @@ struct V100_Scanner : Module {
         NUM_PARAMS
     };
     enum InputIds {
-         IN1,  // inputs must be sequential
+        IN1,  // inputs must be sequential
         IN2,
         IN3,
         IN4,

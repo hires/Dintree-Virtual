@@ -24,47 +24,47 @@
 #include "utils/dsp_utils.h"
 
 struct V102_Output_Mixer : Module {
-	enum ParamIds {
-		POT_LEVEL1,
-		POT_PAN1,
-		POT_LEVEL2,
-		POT_PAN2,
-		POT_LEVEL3,
+    enum ParamIds {
+        POT_LEVEL1,
+        POT_PAN1,
+        POT_LEVEL2,
+        POT_PAN2,
+        POT_LEVEL3,
         POT_PAN3,
-		POT_LEVEL4,
-		POT_PAN4,
+        POT_LEVEL4,
+        POT_PAN4,
         POT_MASTER,
-		NUM_PARAMS
-	};
-	enum InputIds {
-		IN1,
-		IN2,
-		IN3,
-		IN4,
-		SUB_INL,
-		SUB_INR,
-		NUM_INPUTS
-	};
-	enum OutputIds {
-		OUTL,
-		OUTR,
+        NUM_PARAMS
+    };
+    enum InputIds {
+        IN1,
+        IN2,
+        IN3,
+        IN4,
+        SUB_INL,
+        SUB_INR,
+        NUM_INPUTS
+    };
+    enum OutputIds {
+        OUTL,
+        OUTR,
         PRE_OUTL,
         PRE_OUTR,
-		NUM_OUTPUTS
-	};
-	enum LightIds {
-		LED_METERL_P6,
-		LED_METERR_P6,
-		LED_METERL_0,
-		LED_METERR_0,
-		LED_METERL_M6,
-		LED_METERR_M6,
-		LED_METERL_M12,
-		LED_METERR_M12,
-		LED_METERL_M18,
-		LED_METERR_M18,
-		NUM_LIGHTS
-	};
+        NUM_OUTPUTS
+    };
+    enum LightIds {
+        LED_METERL_P6,
+        LED_METERR_P6,
+        LED_METERL_0,
+        LED_METERR_0,
+        LED_METERL_M6,
+        LED_METERR_M6,
+        LED_METERL_M12,
+        LED_METERR_M12,
+        LED_METERL_M18,
+        LED_METERR_M18,
+        NUM_LIGHTS
+    };
 
     // settings
     #define RT_TASK_RATE 1000.0  // Hz
@@ -90,16 +90,16 @@ struct V102_Output_Mixer : Module {
     float sub_hist[2];
     float sub_hist2[2];
 
-	V102_Output_Mixer() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(POT_LEVEL1, 0.f, 1.f, 0.f, "LEVEL 1");
-		configParam(POT_PAN1, 0.f, 1.f, 0.f, "PAN 1");
-		configParam(POT_LEVEL2, 0.f, 1.f, 0.f, "LEVEL 2");
-		configParam(POT_PAN2, 0.f, 1.f, 0.f, "PAN 2");
+    V102_Output_Mixer() {
+        config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+        configParam(POT_LEVEL1, 0.f, 1.f, 0.f, "LEVEL 1");
+        configParam(POT_PAN1, 0.f, 1.f, 0.f, "PAN 1");
+        configParam(POT_LEVEL2, 0.f, 1.f, 0.f, "LEVEL 2");
+        configParam(POT_PAN2, 0.f, 1.f, 0.f, "PAN 2");
         configParam(POT_LEVEL3, 0.f, 1.f, 0.f, "LEVEL 3");
-		configParam(POT_PAN3, 0.f, 1.f, 0.f, "PAN 3");
-		configParam(POT_LEVEL4, 0.f, 1.f, 0.f, "LEVEL 4");
-		configParam(POT_PAN4, 0.f, 1.f, 0.f, "PAN 4");
+        configParam(POT_PAN3, 0.f, 1.f, 0.f, "PAN 3");
+        configParam(POT_LEVEL4, 0.f, 1.f, 0.f, "LEVEL 4");
+        configParam(POT_PAN4, 0.f, 1.f, 0.f, "PAN 4");
         configParam(POT_MASTER, 0.f, 1.f, 0.f, "POT_MASTER");
 
         // load module defaults from user file
@@ -108,10 +108,10 @@ struct V102_Output_Mixer : Module {
         // reset stuff
         onReset();
         onSampleRateChange();
-	}
+    }
 
     // process a sample
-	void process(const ProcessArgs& args) override {
+    void process(const ProcessArgs& args) override {
         float outl, outr, tempf1, tempf2, tempf3, tempf4;
 
         // state
@@ -158,7 +158,7 @@ struct V102_Output_Mixer : Module {
             meter_outl, METER_SMOOTHING);
         DSP_UTILS_LMM(DSP_UTILS_ABS(outr),
             meter_outr, METER_SMOOTHING);
-	}
+    }
 
     // samplerate changed
     void onSampleRateChange(void) override {
@@ -346,53 +346,53 @@ struct V102_Output_Mixer : Module {
 struct V102_Output_MixerWidget : ModuleWidget {
     SvgPanel* darkPanel;
 
-	V102_Output_MixerWidget(V102_Output_Mixer* module) {
-		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V102-Output_Mixer.svg")));
+    V102_Output_MixerWidget(V102_Output_Mixer* module) {
+        setModule(module);
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V102-Output_Mixer.svg")));
 
         darkPanel = new SvgPanel();
         darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V102-Output_Mixer-dark.svg")));
         darkPanel->visible = false;
         addChild(darkPanel);
 
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 24.255)), module, V102_Output_Mixer::POT_LEVEL1));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.44, 24.255)), module, V102_Output_Mixer::POT_PAN1));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 50.904)), module, V102_Output_Mixer::POT_LEVEL2));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 50.904)), module, V102_Output_Mixer::POT_PAN2));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 24.255)), module, V102_Output_Mixer::POT_LEVEL1));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.44, 24.255)), module, V102_Output_Mixer::POT_PAN1));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 50.904)), module, V102_Output_Mixer::POT_LEVEL2));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 50.904)), module, V102_Output_Mixer::POT_PAN2));
         addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.58, 77.616)), module, V102_Output_Mixer::POT_LEVEL3));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 77.574)), module, V102_Output_Mixer::POT_PAN3));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(75.84, 77.616)), module, V102_Output_Mixer::POT_MASTER));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 104.197)), module, V102_Output_Mixer::POT_LEVEL4));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 104.197)), module, V102_Output_Mixer::POT_PAN4));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 77.574)), module, V102_Output_Mixer::POT_PAN3));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(75.84, 77.616)), module, V102_Output_Mixer::POT_MASTER));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 104.197)), module, V102_Output_Mixer::POT_LEVEL4));
+        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 104.197)), module, V102_Output_Mixer::POT_PAN4));
 
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 44.236)), module, V102_Output_Mixer::IN1));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 57.571)), module, V102_Output_Mixer::IN2));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 70.906)), module, V102_Output_Mixer::IN3));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 84.262)), module, V102_Output_Mixer::IN4));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 97.575)), module, V102_Output_Mixer::SUB_INL));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 110.932)), module, V102_Output_Mixer::SUB_INR));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 44.236)), module, V102_Output_Mixer::IN1));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 57.571)), module, V102_Output_Mixer::IN2));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 70.906)), module, V102_Output_Mixer::IN3));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 84.262)), module, V102_Output_Mixer::IN4));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 97.575)), module, V102_Output_Mixer::SUB_INL));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 110.932)), module, V102_Output_Mixer::SUB_INR));
 
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(69.193, 97.575)), module, V102_Output_Mixer::OUTL));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 97.575)), module, V102_Output_Mixer::OUTR));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(69.193, 97.575)), module, V102_Output_Mixer::OUTL));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 97.575)), module, V102_Output_Mixer::OUTR));
         addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(69.193, 110.932)), module, V102_Output_Mixer::PRE_OUTL));
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 110.932)), module, V102_Output_Mixer::PRE_OUTR));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(82.55, 110.932)), module, V102_Output_Mixer::PRE_OUTR));
 
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(72.051, 24.255)), module, V102_Output_Mixer::LED_METERL_P6));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(79.692, 24.255)), module, V102_Output_Mixer::LED_METERR_P6));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(72.051, 31.832)), module, V102_Output_Mixer::LED_METERL_0));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(79.692, 31.832)), module, V102_Output_Mixer::LED_METERR_0));
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 39.453)), module, V102_Output_Mixer::LED_METERL_M6));
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 39.453)), module, V102_Output_Mixer::LED_METERR_M6));
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 47.075)), module, V102_Output_Mixer::LED_METERL_M12));
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 47.073)), module, V102_Output_Mixer::LED_METERR_M12));
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 54.692)), module, V102_Output_Mixer::LED_METERL_M18));
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 54.692)), module, V102_Output_Mixer::LED_METERR_M18));
-	}
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(72.051, 24.255)), module, V102_Output_Mixer::LED_METERL_P6));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(79.692, 24.255)), module, V102_Output_Mixer::LED_METERR_P6));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(72.051, 31.832)), module, V102_Output_Mixer::LED_METERL_0));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(79.692, 31.832)), module, V102_Output_Mixer::LED_METERR_0));
+        addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 39.453)), module, V102_Output_Mixer::LED_METERL_M6));
+        addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 39.453)), module, V102_Output_Mixer::LED_METERR_M6));
+        addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 47.075)), module, V102_Output_Mixer::LED_METERL_M12));
+        addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 47.073)), module, V102_Output_Mixer::LED_METERR_M12));
+        addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 54.692)), module, V102_Output_Mixer::LED_METERL_M18));
+        addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 54.692)), module, V102_Output_Mixer::LED_METERR_M18));
+    }
 
     void appendContextMenu(Menu *menu) override {
         V102_Output_Mixer *module = dynamic_cast<V102_Output_Mixer*>(this->module);
