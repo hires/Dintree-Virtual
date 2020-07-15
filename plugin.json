@@ -73,6 +73,18 @@
         "Quad",
         "Utility"
       ]
+    },
+    {
+      "slug": "V105-Quad_CV_Proc",
+      "name": "V105 Quad CV Proc",
+      "description": "Quad Control Voltage Processor",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V105-quad-cv-proc",
+      "tags": [
+        "Attenuator",
+        "Muxer",
+        "MQuad",
+        "Hardware"
+      ]
     }
   ]
 }

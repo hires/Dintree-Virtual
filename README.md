@@ -159,3 +159,8 @@ to operate. Unlike the hardware version, this module produces a bi-polar voltage
 which is probably more useful. Also unlike the hardware version, the V104 has
 on/off switches on the first two outputs. This lets you toggle on and off a
 preset voltage.
+
+### V105 Quad CV Proc
+**Quad Control Voltage Processor**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V105-Quad_CV_Proc.png" />

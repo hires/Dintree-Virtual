@@ -91,11 +91,12 @@ struct V104_Four_Vs : Module {
 
     // module initialize
     void onReset(void) override {
-        // set initial pot values
         params[POT_VOLTAGE1].setValue(0.0);
         params[POT_VOLTAGE2].setValue(0.0);
         params[POT_VOLTAGE3].setValue(0.0);
         params[POT_VOLTAGE4].setValue(0.0);
+        params[ON1_SW].setValue(1.0);
+        params[ON2_SW].setValue(1.0);
     }
 
     // module randomize
