@@ -25,45 +25,45 @@
 
 // Dintree V100 Scanner module
 struct V100_Scanner : Module {
-	enum ParamIds {
-		POT_RANGE,
+    enum ParamIds {
+        POT_RANGE,
         RAND_SW,
         CV_SW,
-		NUM_PARAMS
-	};
-	enum InputIds {
- 		IN1,  // inputs must be sequential
-		IN2,
-		IN3,
-		IN4,
-		IN5,
-		IN6,
+        NUM_PARAMS
+    };
+    enum InputIds {
+         IN1,  // inputs must be sequential
+        IN2,
+        IN3,
+        IN4,
+        IN5,
+        IN6,
         IN7,
         IN8,
-		CTRL_IN,
-		NUM_INPUTS
-	};
-	enum OutputIds {
-		OUTA,
+        CTRL_IN,
+        NUM_INPUTS
+    };
+    enum OutputIds {
+        OUTA,
         OUTB,
-		NUM_OUTPUTS
-	};
-	enum LightIds {
-		IN1_LED,  // input LEDs must be sequential
-		IN2_LED,
+        NUM_OUTPUTS
+    };
+    enum LightIds {
+        IN1_LED,  // input LEDs must be sequential
+        IN2_LED,
         IN3_LED,
-		IN4_LED,
+        IN4_LED,
         IN5_LED,
-		IN6_LED,
+        IN6_LED,
         IN7_LED,
         IN8_LED,
-		RAND_LED,
-		CV_LED,
-		CTRL_LED,
-		OUTA_LED,
-		OUTB_LED,
-		NUM_LIGHTS
-	};
+        RAND_LED,
+        CV_LED,
+        CTRL_LED,
+        OUTA_LED,
+        OUTB_LED,
+        NUM_LIGHTS
+    };
     enum {
         MODE_CV,
         MODE_CLOCK
@@ -79,9 +79,9 @@ struct V100_Scanner : Module {
     struct ModuleDefaults module_defaults;
 
     // constructor
-	V100_Scanner() {
-		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(POT_RANGE, 0.f, 1.f, 0.f, "POT_RANGE");
+    V100_Scanner() {
+        config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+        configParam(POT_RANGE, 0.f, 1.f, 0.f, "POT_RANGE");
 
         // load module defaults from user file
         loadDefaults(&module_defaults);
@@ -94,10 +94,10 @@ struct V100_Scanner : Module {
         onReset();
         onSampleRateChange();
         setParams();
-	}
+    }
 
     // process a sample
-	void process(const ProcessArgs& args) override {
+    void process(const ProcessArgs& args) override {
         float out;
         // state
         if(taskTimer.process()) {
@@ -109,7 +109,7 @@ struct V100_Scanner : Module {
         out = inputs[IN1 + chan_b].getVoltage();
         outputs[OUTB].setVoltage(out);
         lights[OUTB_LED].setBrightness(clamp(out * 0.5, 0.0f, 1.0f));
-	}
+    }
 
     // samplerate changed
     void onSampleRateChange(void) override {
@@ -215,60 +215,60 @@ struct V100_Scanner : Module {
 struct V100_ScannerWidget : ModuleWidget {
     SvgPanel* darkPanel;
 
-	V100_ScannerWidget(V100_Scanner* module) {
-		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner.svg")));
+    V100_ScannerWidget(V100_Scanner* module) {
+        setModule(module);
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner.svg")));
 
         darkPanel = new SvgPanel();
         darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner-dark.svg")));
         darkPanel->visible = false;
         addChild(darkPanel);
 
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+        addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+        addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
         addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::POT_RANGE));
 
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 19.792)), module, V100_Scanner::IN1));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 32.492)), module, V100_Scanner::IN2));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 45.192)), module, V100_Scanner::IN3));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.759, 57.913)), module, V100_Scanner::IN4));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 70.592)), module, V100_Scanner::IN5));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 83.292)), module, V100_Scanner::IN6));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(29.058, 83.313)), module, V100_Scanner::CTRL_IN));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 95.992)), module, V100_Scanner::IN7));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 108.692)), module, V100_Scanner::IN8));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 19.792)), module, V100_Scanner::IN1));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 32.492)), module, V100_Scanner::IN2));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 45.192)), module, V100_Scanner::IN3));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.759, 57.913)), module, V100_Scanner::IN4));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 70.592)), module, V100_Scanner::IN5));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 83.292)), module, V100_Scanner::IN6));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(29.058, 83.313)), module, V100_Scanner::CTRL_IN));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 95.992)), module, V100_Scanner::IN7));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 108.692)), module, V100_Scanner::IN8));
 
-		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(29.079, 95.992)), module, V100_Scanner::OUTA));
+        addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(29.079, 95.992)), module, V100_Scanner::OUTA));
         addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(29.104, 108.666)), module, V100_Scanner::OUTB));
 
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 19.792)), module, V100_Scanner::IN1_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 32.492)), module, V100_Scanner::IN2_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 45.192)), module, V100_Scanner::RAND_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 45.213)), module, V100_Scanner::IN3_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 57.892)), module, V100_Scanner::IN4_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 64.242)), module, V100_Scanner::CV_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 70.592)), module, V100_Scanner::IN5_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 83.292)), module, V100_Scanner::IN6_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 83.292)), module, V100_Scanner::CTRL_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 95.992)), module, V100_Scanner::IN7_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 95.992)), module, V100_Scanner::OUTA_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 108.692)), module, V100_Scanner::IN8_LED));
-		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 108.692)), module, V100_Scanner::OUTB_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 19.792)), module, V100_Scanner::IN1_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 32.492)), module, V100_Scanner::IN2_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 45.192)), module, V100_Scanner::RAND_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 45.213)), module, V100_Scanner::IN3_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 57.892)), module, V100_Scanner::IN4_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 64.242)), module, V100_Scanner::CV_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 70.592)), module, V100_Scanner::IN5_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 83.292)), module, V100_Scanner::IN6_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 83.292)), module, V100_Scanner::CTRL_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 95.992)), module, V100_Scanner::IN7_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 95.992)), module, V100_Scanner::OUTA_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 108.692)), module, V100_Scanner::IN8_LED));
+        addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 108.692)), module, V100_Scanner::OUTB_LED));
 
         addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
         addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
-	}
+    }
 
     void appendContextMenu(Menu *menu) override {
         V100_Scanner *module = dynamic_cast<V100_Scanner*>(this->module);
-		assert(module);
+        assert(module);
 
         // add theme chooser
-    	MenuLabel *spacerLabel = new MenuLabel();
-		menu->addChild(spacerLabel);
+        MenuLabel *spacerLabel = new MenuLabel();
+        menu->addChild(spacerLabel);
 
         MenuLabel *themeLabel = new MenuLabel();
         themeLabel->text = "Panel Theme";
@@ -282,7 +282,7 @@ struct V100_ScannerWidget : ModuleWidget {
         darkItem->module = module;
         menu->addChild(darkItem);
 
-    	menu->addChild(new MenuLabel());
+        menu->addChild(new MenuLabel());
     }
 
     // handle changes to the panel theme
