@@ -152,7 +152,7 @@ The reverb type switch selects one of two reverb sounds: BIG or SMALL.
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V104-Four_Vs.png" />
 
-The V104 is a VCV clone of the [Dintree D104 Four Vs](http://dintree.com/#D104)
+The V104 Four Vs is a VCV clone of the [Dintree D104 Four Vs](http://dintree.com/#D104)
 DIY module by Andrew Kilpatrick. It just produces four different voltages but
 can be used for testing and triggering modules that require a voltage present
 to operate. Unlike the hardware version, this module produces a bi-polar voltage
@@ -164,3 +164,11 @@ preset voltage.
 **Quad Control Voltage Processor**
 
 <img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V105-Quad_CV_Proc.png" />
+
+The V105 Quad CV Proc is a VCV clone of the [Dintree D105 Quad CV Proc](http://dintree.com/#D105)
+DIY module by Andrew Kilpatrick. It provides four channels of simple CV
+processing which allow signals to be mixed, gained up and down, and inverted.
+Two inputs on each channel are buffered and mixed together. The gain control
+allows the final output to be set from 0x to 2x, offering both attenuation
+and gain. Dual outputs from each section offer non-inverted (+) and inverted (-)
+outputs.
