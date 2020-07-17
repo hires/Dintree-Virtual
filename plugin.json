@@ -1,7 +1,7 @@
 {
   "slug": "Dintree-Virtual",
   "name": "Dintree",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "license": "GPL-3.0-or-later",
   "brand": "Dintree",
   "author": "Andrew Kilpatrick",
@@ -81,8 +81,8 @@
       "manualUrl": "https://github.com/hires/Dintree-Virtual#V105-quad-cv-proc",
       "tags": [
         "Attenuator",
-        "Muxer",
-        "MQuad",
+        "Mixer",
+        "Quad",
         "Hardware"
       ]
     },
