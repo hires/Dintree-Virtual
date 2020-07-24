@@ -128,7 +128,7 @@ and the other channel will go all the way to zero.
 #### MASTER Control
 
 The MASTER control affects the master output jacks. A midrange setting is
-probably best in most cases. You can use the levelmeters to get a sense of the
+probably best in most cases. You can use the level meters to get a sense of the
 overall output level. Aiming for around 0dB will ensure you drive the next
 module with a decent level.
 
