@@ -58,6 +58,9 @@ struct V107_Dual_Slew : Module {
 		configParam(POT_SLEW1, 0.f, 1.f, 0.f, "SLEW 1");
 		configParam(POT_SLEW2, 0.f, 1.f, 0.f, "SLEW 2");
 
+        // load module defaults from user file
+        loadDefaults(&module_defaults);
+
         // reset stuff
         hist1 = 0.0;
         hist2 = 0.0;

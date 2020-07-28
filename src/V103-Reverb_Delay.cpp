@@ -121,6 +121,9 @@ struct V103_Reverb_Delay : Module {
         configParam(DEL_SW, 0.0f, 2.0f, 0.0f, "DELAY TYPE");
         configParam(REV_SW, 0.0f, 1.0f, 0.0f, "REVERB_TYPE");
 
+        // load module defaults from user file
+        loadDefaults(&module_defaults);
+
         // reset stuff
         onReset();
         onSampleRateChange();
@@ -458,7 +461,6 @@ struct V103_Reverb_Delay : Module {
         lfilt_z1 = 0.0;
         lfilt_z1 = 0.0;
     }
-
 };
 
 struct V103_Reverb_DelayWidget : ModuleWidget {
