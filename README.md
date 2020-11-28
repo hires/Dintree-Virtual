@@ -285,6 +285,17 @@ slightly different offsets. This can create interesting effects with filters.
 &nbsp;
 &nbsp;
 &nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
 
 ----
 ### V201 Tri Comparator
@@ -320,3 +331,7 @@ The functions that operate on each of the 16 outputs are as follows:
 - **A ≠ B < C**
 - **A ≠ B > C**
 - **A ≠ B ≠ C**
+
+All outputs are processed at the full system rate. You might want to use a slew
+processor or other type of filter to slow down very fast signals so they will create
+more interesting outputs, especially when using the equal and not equal functions.
