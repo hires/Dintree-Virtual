@@ -273,3 +273,38 @@ because a simple RC filter has a log curve the pitch will not track evenly per
 octave when used with a V/oct type of CV signal. Another use is for making a
 simple lag processor to convert a single CV into multiple versions that have
 slightly different offsets. This can create interesting effects with filters.
+
+----
+### V201 Tri Comparator
+**Analog Comparator Functions**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V201-Tri_Comparator.png" />
+
+The V201 Tri Comparator performs 16 different voltage comparison functions between three
+inputs. The inputs are labeled IN A, IN B and IN C and accept any range of voltages. The
+outputs each produce a function by comparing the three inputs in different combinations.
+Possible comparison functions are:
+
+- **=** - Equal - A pair of inputs are said to be equal if they are within 0.01V.
+- **<** - Less Than - The left input is less than the right input.
+- **>** - Greater Than - The left input is greater than the right input.
+- **&#8800;** - Not Equal - The inverse of Equal
+
+The functions that operate on each of the 16 outputs are as follows:
+
+- **A = B = C**
+- **A = B < C**
+- **A = B > C**
+- **A = B ≠ C**
+- **A < B = C**
+- **A < B < C**
+- **A < B > C**
+- **A < B ≠ C**
+- **A > B = C**
+- **A > B < C**
+- **A > B > C**
+- **A > B ≠ C**
+- **A ≠ B = C**
+- **A ≠ B < C**
+- **A ≠ B > C**
+- **A ≠ B ≠ C**

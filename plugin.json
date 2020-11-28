@@ -96,6 +96,16 @@
         "Hardware",
         "Slew Limiter"
       ]
+    },
+    {
+      "slug": "V201-Tri_Comparator",
+      "name": "V201-Tri_Comparator",
+      "description": "Analog Comparator Functions",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V201-tri-comparator",
+      "tags": [
+        "logic",
+        "utility"
+      ]
     }
   ]
 }

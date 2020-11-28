@@ -36,6 +36,7 @@ extern Model* modelV103_Reverb_Delay;
 extern Model* modelV104_Four_Vs;
 extern Model* modelV105_Quad_CV_Proc;
 extern Model* modelV107_Dual_Slew;
+extern Model* modelV201_Tri_Comparator;
 
 // defaults for modules that users can store
 struct ModuleDefaults {
