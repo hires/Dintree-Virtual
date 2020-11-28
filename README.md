@@ -8,10 +8,10 @@ and his DIY and commercial music and audio projects.
 
 **Useful links:**
 
-* [VCV Rack Virtual Eurorack DAW](https://vcvrack.com)
-* [Dintree Synth DIY Site](http://dintree.com)
-* [Andrew Kilpatrick](https://www.andrewkilpatrick.org)
-* [Kilpatrick Audio](https://www.kilpatrickaudio.com)
+* [VCV Rack Virtual Eurorack DAW](https://vcvrack.com) - VCV Rack is what this code runs on
+* [Dintree Synth DIY Site](http://dintree.com) - The SDIY site on which many of these modules are based
+* [Andrew Kilpatrick](https://www.andrewkilpatrick.org) - Creator of these modules (hardware and software)
+* [Kilpatrick Audio](https://www.kilpatrickaudio.com) - Commercial music products from the creator
 
 ## Modules
 
