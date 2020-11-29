@@ -44,6 +44,17 @@ do { \
     } \
 } while(0)
 
+#define DSP_UTILS_LS(in, out, attack, release) \
+do { \
+    if((in) > (out)) { \
+        (out) *= 1.0 - (attack); \
+        (out) += (attack) * (in); \
+    } \
+    else { \
+        (out) *= 1.0 - (release); \
+    } \
+} while(0)
+
 #define DSP_UTILS_DCB(in, out, ihst, ohst) ({ \
     (out) = (in) - (ihst) + (0.999 * (ohst)); \
     (ihst) = (in); \
@@ -95,6 +106,15 @@ do { \
     (acc) += ((it1) * -(g)); \
     delay[((dp) + (inaddr)) & ((dlen) - 1)] = (acc); \
     (acc) = ((acc) * (g)) + (it1); \
+})
+
+#define DSP_UTILS_RLSFP(freq, rate, fs) ({ \
+    (freq) = (rate) / (fs); \
+})
+
+#define DSP_UTILS_RLP(freq, pa) ({ \
+    (pa) += (freq); \
+    if((pa) > 1.0) (pa) -= 1.0; \
 })
 
 #define DSP_UTILS_F2DB(x) ({ \

@@ -335,3 +335,72 @@ The functions that operate on each of the 16 outputs are as follows:
 All outputs are processed at the full system rate. You might want to use a slew
 processor or other type of filter to slow down very fast signals so they will create
 more interesting outputs, especially when using the equal and not equal functions.
+
+----
+### V218 S&H / Clock / Noise Generator
+**Sample and Hold, Clock and Noise Generator**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V218-SH_Clock_Noise.png" />
+
+The V218 S&H / Clock / Noise Generator is basically three modules in one. It is
+based on the Aries AR-318 module of a similar name. Please note that this is not
+a hardware clone and the functionality and behaviour is based on looking at the
+schematic and front panel controls. No calculations or models were made to verify
+the same behaviour.
+
+**Sample and Hold Section**
+
+The sample and hold (S&H) section can be used to capture and "hold" a voltage
+for as long as necessary. An audio or control voltage is input into the SH IN jack.
+The sampled / held voltage is output from the SH OUT jack. There are two ways to
+operate the sample and hold circuit:
+
+- **GATE IN** - The GATE IN jack will cause the signal to "track" or pass through as long as
+the gate signal is above +1.0 volts. When the gate falls below +1.0V the most recent
+value is held on the output.
+
+**TRIG IN** - The TRIG IN jack will cause the current input voltage to be sampled.
+The sample happens on the positive edge of the signal. Using the TRIG IN there is no
+"tracking" of the input signal, the input is sampled at only one moment in time for
+each positive edge of the TRIG IN signal.
+
+The level of the SH OUT signal can be adjusted with the S&H LEVEL control. This signal
+happens after the sample and hold circuit and does not affect the sampling.
+
+**Clock Section**
+
+The clock section is a convenient clock generator with a range from 0.3Hz to 30Hz per
+cycle. The frequency is adjusted with the CLOCK FREQ control. The clock has three
+simultanous outputs:
+
+- **SAW OUT** - This is a voltage which ranges from 0 to +10V and is the internal
+"core" of the clock generator.
+- **SQ OUT** - The SQ OUT jack produces a square with (50% duty cycle) which goes
+high in the middle of each saw wave cycle, and resets at the end of each saw wave.
+- **TRIG OUT** - The TRIG OUT jack produces a short pulse every time the SQ OUT goes
+high. The difference is that the TRIG OUT signal is only on for 5ms.
+
+There are several inputs that can be used to control the clock generator:
+
+- **FM IN** - The FM IN jack allows a voltage to adjust the frequency of the clock.
+A bipolar signal will add or subtract from the current setting of the CLOCK FREQ control.
+The range of frequencies that can be produced is clamped to the the range of the CLOCK FREQ
+control: 0.3Hz to 30Hz.
+- **SYNC IN** - The SYNC IN jack allows the clock generator sawtooth core to be reset
+at any point in the cycle. This can be used to create syncopating or chaotic pulses.
+
+**Noise Generator**
+
+The noise generator uses a white noise source to develop three useful types of noise
+which come out on three jacks:
+
+- **W OUT** - Raw white noise signal from a random number generator in the computer.
+This signal has an amplitude of 20V peak to peak.
+- **P OUT** - A filtered pink noise source that is made from the white noise signal.
+It uses a three stage filter to develop a pink noise approximation of -3dB/oct
+(-10dB/decade) filtered signal. This is useful for audio tests or if you don't want
+to blow your speakers. The output level is a bit less than the white noise signal.
+- **R OUT** - The R OUT jack produces a slowly varying voltage. It uses a modified
+peak detector and two stages of low-pass filtering similar to the Aries circuit. It
+can be used to generate weird warbly pitches or other kinds of control voltage rate
+random voltages.

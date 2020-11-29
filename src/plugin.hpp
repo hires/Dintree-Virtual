@@ -37,6 +37,7 @@ extern Model* modelV104_Four_Vs;
 extern Model* modelV105_Quad_CV_Proc;
 extern Model* modelV107_Dual_Slew;
 extern Model* modelV201_Tri_Comparator;
+extern Model* modelV218_SH_Clock_Noise;
 
 // defaults for modules that users can store
 struct ModuleDefaults {

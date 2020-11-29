@@ -1,5 +1,6 @@
 #include "plugin.hpp"
 
+// Dintree V201 Tri Comparator module
 struct V201_Tri_Comparator : Module {
 	enum ParamIds {
 		OUT_RANGE_SW,
@@ -53,6 +54,7 @@ struct V201_Tri_Comparator : Module {
 		NUM_LIGHTS
 	};
 
+    #define BICOLOR_LED_SCALE 0.2f
     #define EQUAL_NEARNESS 0.01
     #define RT_TASK_RATE 100.0
     dsp::ClockDivider taskTimer;
@@ -250,8 +252,15 @@ struct V201_Tri_Comparator : Module {
         }
 
         // input A
+        ina *= BICOLOR_LED_SCALE;
+        inb *= BICOLOR_LED_SCALE;
+        inc *= BICOLOR_LED_SCALE;
         lights[IN_A_LED + 0].setBrightness(clamp(-ina, 0.0f, 1.0f));  // red
         lights[IN_A_LED + 1].setBrightness(clamp(ina, 0.0f, 1.0f));  // green
+        lights[IN_B_LED + 0].setBrightness(clamp(-inb, 0.0f, 1.0f));  // red
+        lights[IN_B_LED + 1].setBrightness(clamp(inb, 0.0f, 1.0f));  // green
+        lights[IN_C_LED + 0].setBrightness(clamp(-inc, 0.0f, 1.0f));  // red
+        lights[IN_C_LED + 1].setBrightness(clamp(inc, 0.0f, 1.0f));  // green
 	}
 
     // samplerate changed
@@ -356,6 +365,5 @@ struct V201_Tri_ComparatorWidget : ModuleWidget {
         addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(37.48, 101.0)), module, V201_Tri_Comparator::IN_C_LED));
 	}
 };
-
 
 Model* modelV201_Tri_Comparator = createModel<V201_Tri_Comparator, V201_Tri_ComparatorWidget>("V201-Tri_Comparator");

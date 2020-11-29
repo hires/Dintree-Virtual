@@ -37,6 +37,7 @@ void init(Plugin* p) {
     p->addModel(modelV105_Quad_CV_Proc);
     p->addModel(modelV107_Dual_Slew);
     p->addModel(modelV201_Tri_Comparator);
+    p->addModel(modelV218_SH_Clock_Noise);
 
 	// Any other plugin initialization may go here.
 	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.
