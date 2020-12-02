@@ -252,8 +252,6 @@ struct V101_Dual_Envelope : Module {
             // run envelopes
             envelope_control(0, inputs[GATE1_IN].getVoltage() > 1.0 ? 0 : 1);
             envelope_control(1, inputs[GATE2_IN].getVoltage() > 1.0 ? 0 : 1);
-//            load_dac(0, env_level[0]);
-//            load_dac(1, env_level[1]);
             // convert to float now so we can smooth it a bit since we don't have analog hardware
             env1_out = (float)env_level[0] * 0.000152588;
             env2_out = (float)env_level[1] * 0.000152588;
@@ -266,21 +264,6 @@ struct V101_Dual_Envelope : Module {
         outputs[ENV1_OUT].setVoltage(tempf);
         DSP_UTILS_F1LP(env2_out, tempf, 0.1, dac1_z1);
         outputs[ENV2_OUT].setVoltage(tempf);
-
-/*
-        // send output to DAC
-        void load_dac(unsigned char chan, unsigned int val) {
-            float tempf = (float)val * 0.000152588;
-            if(chan) {
-                outputs[ENV2_OUT].setVoltage(tempf);
-                lights[ENV2_LED].setBrightness(tempf * 0.1);
-            }
-            else {
-                outputs[ENV1_OUT].setVoltage(tempf);
-                lights[ENV1_LED].setBrightness(tempf * 0.1);
-            }
-        }
-*/
     }
 
     // samplerate changed
