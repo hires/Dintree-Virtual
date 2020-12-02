@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/dsp_utils.h"
 
 struct V101_Dual_Envelope : Module {
     enum ParamIds {
@@ -209,6 +210,8 @@ struct V101_Dual_Envelope : Module {
     int32_t sustain[2];  // sustain level
     int32_t release[2];  // step size for release phase
     uint8_t lfo_trig[2];  // 1 = auto trig, 0 = reset by gate
+    float env1_out, env2_out;
+    float dac0_z1, dac1_z1;
 
     // state
     dsp::ClockDivider taskTimer;
@@ -239,6 +242,8 @@ struct V101_Dual_Envelope : Module {
 
     // process a sample
     void process(const ProcessArgs& args) override {
+        float tempf;
+
         // state
         if(taskTimer.process()) {
             if((timer_div & 0x08) == 0) {
@@ -247,10 +252,35 @@ struct V101_Dual_Envelope : Module {
             // run envelopes
             envelope_control(0, inputs[GATE1_IN].getVoltage() > 1.0 ? 0 : 1);
             envelope_control(1, inputs[GATE2_IN].getVoltage() > 1.0 ? 0 : 1);
-            load_dac(0, env_level[0]);
-            load_dac(1, env_level[1]);
+//            load_dac(0, env_level[0]);
+//            load_dac(1, env_level[1]);
+            // convert to float now so we can smooth it a bit since we don't have analog hardware
+            env1_out = (float)env_level[0] * 0.000152588;
+            env2_out = (float)env_level[1] * 0.000152588;
+            lights[ENV1_LED].setBrightness(env1_out * 0.1);
+            lights[ENV2_LED].setBrightness(env2_out * 0.1);
             timer_div ++;
         }
+
+        DSP_UTILS_F1LP(env1_out, tempf, 0.1, dac0_z1);
+        outputs[ENV1_OUT].setVoltage(tempf);
+        DSP_UTILS_F1LP(env2_out, tempf, 0.1, dac1_z1);
+        outputs[ENV2_OUT].setVoltage(tempf);
+
+/*
+        // send output to DAC
+        void load_dac(unsigned char chan, unsigned int val) {
+            float tempf = (float)val * 0.000152588;
+            if(chan) {
+                outputs[ENV2_OUT].setVoltage(tempf);
+                lights[ENV2_LED].setBrightness(tempf * 0.1);
+            }
+            else {
+                outputs[ENV1_OUT].setVoltage(tempf);
+                lights[ENV1_LED].setBrightness(tempf * 0.1);
+            }
+        }
+*/
     }
 
     // samplerate changed
@@ -271,8 +301,8 @@ struct V101_Dual_Envelope : Module {
         params[POT_RELEASE2].setValue(0.2);
 
         // clear outputs
-        load_dac(0, 0);
-        load_dac(1, 0);
+        env1_out = 0.0f;
+        env2_out = 0.0f;
 
         // reset stuff
         timer_div = 0;
@@ -286,6 +316,10 @@ struct V101_Dual_Envelope : Module {
         env_level[1] = 0;
         lfo_trig[0] = 1;
         lfo_trig[1] = 1;
+        env1_out = 0.0f;
+        env2_out = 0.0f;
+        dac0_z1 = 0.0f;
+        dac1_z1 = 0.0f;
         setParams();
     }
 
@@ -374,19 +408,6 @@ struct V101_Dual_Envelope : Module {
                 lfo_trig[1] = 1;  // reset
                 reset_envelope(1);
             }
-        }
-    }
-
-    // send output to DAC
-    void load_dac(unsigned char chan, unsigned int val) {
-        float tempf = (float)val * 0.000152588;
-        if(chan) {
-            outputs[ENV2_OUT].setVoltage(tempf);
-            lights[ENV2_LED].setBrightness(tempf * 0.1);
-        }
-        else {
-            outputs[ENV1_OUT].setVoltage(tempf);
-            lights[ENV1_LED].setBrightness(tempf * 0.1);
         }
     }
 
