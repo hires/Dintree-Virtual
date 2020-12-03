@@ -147,6 +147,48 @@ struct V107_Dual_SlewWidget : ModuleWidget {
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.684, 95.776)), module, V107_Dual_Slew::OUT1));
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.684, 111.228)), module, V107_Dual_Slew::OUT2));
 	}
+
+    void appendContextMenu(Menu *menu) override {
+        V107_Dual_Slew *module = dynamic_cast<V107_Dual_Slew*>(this->module);
+        assert(module);
+
+        // add theme chooser
+        MenuLabel *spacerLabel = new MenuLabel();
+        menu->addChild(spacerLabel);
+
+        MenuLabel *themeLabel = new MenuLabel();
+        themeLabel->text = "Panel Theme";
+        menu->addChild(themeLabel);
+
+        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
+        lightItem->module = module;
+        menu->addChild(lightItem);
+
+        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
+        darkItem->module = module;
+        menu->addChild(darkItem);
+
+        menu->addChild(new MenuLabel());
+    }
+
+    // handle changes to the panel theme
+    struct PanelThemeItem : MenuItem {
+        V107_Dual_Slew *module;
+
+        void onAction(const event::Action &e) override {
+            module->module_defaults.darkTheme ^= 0x1;
+            saveDefaults(&module->module_defaults);
+        }
+    };
+
+    void step() override {
+        if(module) {
+            panel->visible = ((((V107_Dual_Slew*)module)->module_defaults.darkTheme) == 0);
+            darkPanel->visible  = ((((V107_Dual_Slew*)module)->module_defaults.darkTheme) == 1);
+        }
+        Widget::step();
+    }
+
 };
 
 

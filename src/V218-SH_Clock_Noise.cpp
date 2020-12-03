@@ -308,6 +308,47 @@ struct V218_SH_Clock_NoiseWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(25.4, 100.5)), module, V218_SH_Clock_Noise::CLOCK_SQ_OUT_LED));
 		addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(39.4, 100.5)), module, V218_SH_Clock_Noise::NOISE_R_OUT_LED));
 	}
+
+    void appendContextMenu(Menu *menu) override {
+        V218_SH_Clock_Noise *module = dynamic_cast<V218_SH_Clock_Noise*>(this->module);
+        assert(module);
+
+        // add theme chooser
+        MenuLabel *spacerLabel = new MenuLabel();
+        menu->addChild(spacerLabel);
+
+        MenuLabel *themeLabel = new MenuLabel();
+        themeLabel->text = "Panel Theme";
+        menu->addChild(themeLabel);
+
+        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
+        lightItem->module = module;
+        menu->addChild(lightItem);
+
+        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
+        darkItem->module = module;
+        menu->addChild(darkItem);
+
+        menu->addChild(new MenuLabel());
+    }
+
+    // handle changes to the panel theme
+    struct PanelThemeItem : MenuItem {
+        V218_SH_Clock_Noise *module;
+
+        void onAction(const event::Action &e) override {
+            module->module_defaults.darkTheme ^= 0x1;
+            saveDefaults(&module->module_defaults);
+        }
+    };
+
+    void step() override {
+        if(module) {
+            panel->visible = ((((V218_SH_Clock_Noise*)module)->module_defaults.darkTheme) == 0);
+            darkPanel->visible  = ((((V218_SH_Clock_Noise*)module)->module_defaults.darkTheme) == 1);
+        }
+        Widget::step();
+    }
 };
 
 Model* modelV218_SH_Clock_Noise = createModel<V218_SH_Clock_Noise, V218_SH_Clock_NoiseWidget>("V218-SH-Clock-Noise");

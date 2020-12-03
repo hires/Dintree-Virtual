@@ -386,6 +386,48 @@ struct V201_Tri_ComparatorWidget : ModuleWidget {
         addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(23.48, 101.0)), module, V201_Tri_Comparator::IN_B_LED));
         addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(37.48, 101.0)), module, V201_Tri_Comparator::IN_C_LED));
 	}
+
+    void appendContextMenu(Menu *menu) override {
+        V201_Tri_Comparator *module = dynamic_cast<V201_Tri_Comparator*>(this->module);
+        assert(module);
+
+        // add theme chooser
+        MenuLabel *spacerLabel = new MenuLabel();
+        menu->addChild(spacerLabel);
+
+        MenuLabel *themeLabel = new MenuLabel();
+        themeLabel->text = "Panel Theme";
+        menu->addChild(themeLabel);
+
+        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
+        lightItem->module = module;
+        menu->addChild(lightItem);
+
+        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
+        darkItem->module = module;
+        menu->addChild(darkItem);
+
+        menu->addChild(new MenuLabel());
+    }
+
+    // handle changes to the panel theme
+    struct PanelThemeItem : MenuItem {
+        V201_Tri_Comparator *module;
+
+        void onAction(const event::Action &e) override {
+            module->module_defaults.darkTheme ^= 0x1;
+            saveDefaults(&module->module_defaults);
+        }
+    };
+
+    void step() override {
+        if(module) {
+            panel->visible = ((((V201_Tri_Comparator*)module)->module_defaults.darkTheme) == 0);
+            darkPanel->visible  = ((((V201_Tri_Comparator*)module)->module_defaults.darkTheme) == 1);
+        }
+        Widget::step();
+    }
+
 };
 
 Model* modelV201_Tri_Comparator = createModel<V201_Tri_Comparator, V201_Tri_ComparatorWidget>("V201-Tri_Comparator");
