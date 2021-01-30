@@ -21,6 +21,8 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
 
 // Dintree V201 Tri Comparator module
 struct V201_Tri_Comparator : Module {
@@ -79,17 +81,13 @@ struct V201_Tri_Comparator : Module {
     #define BICOLOR_LED_SCALE 0.2f
     #define EQUAL_NEARNESS 0.01
     #define RT_TASK_RATE 100.0
-    dsp::ClockDivider taskTimer;
-    struct ModuleDefaults module_defaults;
+    dsp::ClockDivider task_timer;
     float AUDIO_FS;
     float output_level;
 
 	V201_Tri_Comparator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(OUT_RANGE_SW, 0.f, 1.f, 0.f, "OUT RANGE");
-
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
 
         // reset stuff
         onReset();
@@ -103,7 +101,7 @@ struct V201_Tri_Comparator : Module {
         float ina, inb, inc;
 
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
 
@@ -288,7 +286,7 @@ struct V201_Tri_Comparator : Module {
     // samplerate changed
     void onSampleRateChange(void) override {
         AUDIO_FS = APP->engine->getSampleRate();
-        taskTimer.setDivision((int)(AUDIO_FS / RT_TASK_RATE));
+        task_timer.setDivision((int)(AUDIO_FS / RT_TASK_RATE));
     }
 
     // module initialize
@@ -297,21 +295,6 @@ struct V201_Tri_Comparator : Module {
         lights[IN_A_LED + 2].setBrightness(0.0f);
         lights[IN_B_LED + 2].setBrightness(0.0f);
         lights[IN_C_LED + 2].setBrightness(0.0f);
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -327,23 +310,22 @@ struct V201_Tri_Comparator : Module {
 
 
 struct V201_Tri_ComparatorWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
 	V201_Tri_ComparatorWidget(V201_Tri_Comparator* module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V201-Tri_Comparator.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V201-Tri_Comparator-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V201-Tri_Comparator.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V201-Tri_Comparator-b.svg"));
+        theme_chooser->initPanel();
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(51.48, 112.5)), module, V201_Tri_Comparator::OUT_RANGE_SW));
+		addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(51.48, 112.5)), module, V201_Tri_Comparator::OUT_RANGE_SW));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(9.48, 112.5)), module, V201_Tri_Comparator::A_IN));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(23.48, 112.5)), module, V201_Tri_Comparator::B_IN));
@@ -391,43 +373,18 @@ struct V201_Tri_ComparatorWidget : ModuleWidget {
         V201_Tri_Comparator *module = dynamic_cast<V201_Tri_Comparator*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V201_Tri_Comparator *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V201_Tri_Comparator *module = dynamic_cast<V201_Tri_Comparator*>(this->module);
         if(module) {
-            panel->visible = ((((V201_Tri_Comparator*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V201_Tri_Comparator*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }
-
 };
 
 Model* modelV201_Tri_Comparator = createModel<V201_Tri_Comparator, V201_Tri_ComparatorWidget>("V201-Tri_Comparator");

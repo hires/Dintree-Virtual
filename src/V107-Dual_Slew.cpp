@@ -21,7 +21,9 @@
  *
  */
 #include "plugin.hpp"
-#include "utils/dsp_utils.h"
+#include "dsp_utils.h"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
 
 struct V107_Dual_Slew : Module {
 	enum ParamIds {
@@ -45,8 +47,7 @@ struct V107_Dual_Slew : Module {
 
     #define RT_TASK_RATE 100.0
 
-    dsp::ClockDivider taskTimer;
-    struct ModuleDefaults module_defaults;
+    dsp::ClockDivider task_timer;
     float hist1;
     float hist2;
     float slew1_a0;
@@ -57,9 +58,6 @@ struct V107_Dual_Slew : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(POT_SLEW1, 0.f, 1.f, 0.f, "SLEW 1");
 		configParam(POT_SLEW2, 0.f, 1.f, 0.f, "SLEW 2");
-
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
 
         // reset stuff
         hist1 = 0.0;
@@ -73,7 +71,7 @@ struct V107_Dual_Slew : Module {
 	void process(const ProcessArgs& args) override {
         float tempf;
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
         DSP_UTILS_F1LP(inputs[IN1].getVoltage(), tempf, slew1_a0, hist1);
@@ -85,27 +83,7 @@ struct V107_Dual_Slew : Module {
     // samplerate changed
     void onSampleRateChange(void) override {
         AUDIO_FS = APP->engine->getSampleRate();
-        taskTimer.setDivision((int)(AUDIO_FS / RT_TASK_RATE));
-    }
-
-    // module initialize
-    void onReset(void) override {
-        // no action
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
+        task_timer.setDivision((int)(AUDIO_FS / RT_TASK_RATE));
     }
 
     // set params based on input
@@ -122,24 +100,23 @@ struct V107_Dual_Slew : Module {
 
 
 struct V107_Dual_SlewWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
 	V107_Dual_SlewWidget(V107_Dual_Slew* module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V107-Dual_Slew.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V107-Dual_Slew-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V107-Dual_Slew.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V107-Dual_Slew-b.svg"));
+        theme_chooser->initPanel();
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(12.706, 24.275)), module, V107_Dual_Slew::POT_SLEW1));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(12.706, 47.241)), module, V107_Dual_Slew::POT_SLEW2));
+		addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(12.706, 24.275)), module, V107_Dual_Slew::POT_SLEW1));
+		addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(12.706, 47.241)), module, V107_Dual_Slew::POT_SLEW2));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.706, 64.872)), module, V107_Dual_Slew::IN1));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.706, 80.324)), module, V107_Dual_Slew::IN2));
@@ -152,44 +129,18 @@ struct V107_Dual_SlewWidget : ModuleWidget {
         V107_Dual_Slew *module = dynamic_cast<V107_Dual_Slew*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V107_Dual_Slew *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V107_Dual_Slew *module = dynamic_cast<V107_Dual_Slew*>(this->module);
         if(module) {
-            panel->visible = ((((V107_Dual_Slew*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V107_Dual_Slew*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }
-
 };
-
 
 Model* modelV107_Dual_Slew = createModel<V107_Dual_Slew, V107_Dual_SlewWidget>("V107-Dual_Slew");

@@ -21,6 +21,8 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
 
 struct V105_Quad_CV_Proc : Module {
     enum ParamIds {
@@ -60,8 +62,7 @@ struct V105_Quad_CV_Proc : Module {
     #define RT_TASK_RATE 1000.0  // Hz
 
     // state
-    dsp::ClockDivider taskTimer;
-    struct ModuleDefaults module_defaults;
+    dsp::ClockDivider task_timer;
     float gain1;
     float gain2;
     float gain3;
@@ -74,9 +75,6 @@ struct V105_Quad_CV_Proc : Module {
         configParam(POT_GAIN3, 0.f, 1.f, 0.f, "");
         configParam(POT_GAIN4, 0.f, 1.f, 0.f, "");
 
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
-
         // reset stuff
         onReset();
         onSampleRateChange();
@@ -87,7 +85,7 @@ struct V105_Quad_CV_Proc : Module {
         float tempf;
 
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
         tempf = (inputs[IN1A].getVoltage() + inputs[IN1B].getVoltage()) * gain1;
@@ -106,7 +104,7 @@ struct V105_Quad_CV_Proc : Module {
 
     // samplerate changed
     void onSampleRateChange(void) override {
-        taskTimer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
+        task_timer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
     }
 
     // module initialize
@@ -115,21 +113,6 @@ struct V105_Quad_CV_Proc : Module {
         params[POT_GAIN2].setValue(0.5);
         params[POT_GAIN3].setValue(0.5);
         params[POT_GAIN4].setValue(0.5);
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -143,26 +126,25 @@ struct V105_Quad_CV_Proc : Module {
 
 
 struct V105_Quad_CV_ProcWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
     V105_Quad_CV_ProcWidget(V105_Quad_CV_Proc* module) {
         setModule(module);
-        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc-b.svg"));
+        theme_chooser->initPanel();
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(21.231, 24.254)), module, V105_Quad_CV_Proc::POT_GAIN1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(21.252, 50.924)), module, V105_Quad_CV_Proc::POT_GAIN2));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(21.231, 77.594)), module, V105_Quad_CV_Proc::POT_GAIN3));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(21.252, 104.285)), module, V105_Quad_CV_Proc::POT_GAIN4));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(21.231, 24.254)), module, V105_Quad_CV_Proc::POT_GAIN1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(21.252, 50.924)), module, V105_Quad_CV_Proc::POT_GAIN2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(21.231, 77.594)), module, V105_Quad_CV_Proc::POT_GAIN3));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(21.252, 104.285)), module, V105_Quad_CV_Proc::POT_GAIN4));
 
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(39.011, 17.544)), module, V105_Quad_CV_Proc::IN1A));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(39.032, 30.879)), module, V105_Quad_CV_Proc::IN1B));
@@ -187,43 +169,18 @@ struct V105_Quad_CV_ProcWidget : ModuleWidget {
         V105_Quad_CV_Proc *module = dynamic_cast<V105_Quad_CV_Proc*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V105_Quad_CV_Proc *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V105_Quad_CV_Proc *module = dynamic_cast<V105_Quad_CV_Proc*>(this->module);
         if(module) {
-            panel->visible = ((((V105_Quad_CV_Proc*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V105_Quad_CV_Proc*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }
 };
-
 
 Model* modelV105_Quad_CV_Proc = createModel<V105_Quad_CV_Proc, V105_Quad_CV_ProcWidget>("V105-Quad_CV_Proc");

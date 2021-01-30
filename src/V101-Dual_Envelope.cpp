@@ -21,7 +21,9 @@
  *
  */
 #include "plugin.hpp"
-#include "utils/dsp_utils.h"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
+#include "dsp_utils.h"
 
 struct V101_Dual_Envelope : Module {
     enum ParamIds {
@@ -214,9 +216,8 @@ struct V101_Dual_Envelope : Module {
     float dac0_z1, dac1_z1;
 
     // state
-    dsp::ClockDivider taskTimer;
+    dsp::ClockDivider task_timer;
     int timer_div;
-    struct ModuleDefaults module_defaults;
 
     // constructor
     V101_Dual_Envelope() {
@@ -232,9 +233,6 @@ struct V101_Dual_Envelope : Module {
         configParam(MODE1_SW, 0.0f, 2.0f, 0.0f, "MODE 1");
         configParam(MODE2_SW, 0.0f, 2.0f, 0.0f, "MODE 2");
 
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
-
         // reset stuff
         onReset();
         onSampleRateChange();
@@ -245,7 +243,7 @@ struct V101_Dual_Envelope : Module {
         float tempf;
 
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             if((timer_div & 0x08) == 0) {
                 setParams();
             }
@@ -268,7 +266,7 @@ struct V101_Dual_Envelope : Module {
 
     // samplerate changed
     void onSampleRateChange(void) override {
-        taskTimer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
+        task_timer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
     }
 
     // module initialize
@@ -304,21 +302,6 @@ struct V101_Dual_Envelope : Module {
         dac0_z1 = 0.0f;
         dac1_z1 = 0.0f;
         setParams();
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -494,30 +477,29 @@ struct V101_Dual_Envelope : Module {
 };
 
 struct V101_Dual_EnvelopeWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
     V101_Dual_EnvelopeWidget(V101_Dual_Envelope* module) {
         setModule(module);
-        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V101-Dual_Envelope.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V101-Dual_Envelope-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V101-Dual_Envelope.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V101-Dual_Envelope-b.svg"));
+        theme_chooser->initPanel();
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.569, 18.519)), module, V101_Dual_Envelope::POT_ATTACK1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.389, 18.519)), module, V101_Dual_Envelope::POT_ATTACK2));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.602, 41.353)), module, V101_Dual_Envelope::POT_DECAY1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.389, 41.353)), module, V101_Dual_Envelope::POT_DECAY2));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.569, 64.259)), module, V101_Dual_Envelope::POT_SUSTAIN1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.462, 64.259)), module, V101_Dual_Envelope::POT_SUSTAIN2));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.602, 87.119)), module, V101_Dual_Envelope::POT_RELEASE1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.389, 87.119)), module, V101_Dual_Envelope::POT_RELEASE2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.569, 18.519)), module, V101_Dual_Envelope::POT_ATTACK1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.389, 18.519)), module, V101_Dual_Envelope::POT_ATTACK2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.602, 41.353)), module, V101_Dual_Envelope::POT_DECAY1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.389, 41.353)), module, V101_Dual_Envelope::POT_DECAY2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.569, 64.259)), module, V101_Dual_Envelope::POT_SUSTAIN1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.462, 64.259)), module, V101_Dual_Envelope::POT_SUSTAIN2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.602, 87.119)), module, V101_Dual_Envelope::POT_RELEASE1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.389, 87.119)), module, V101_Dual_Envelope::POT_RELEASE2));
 
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.284, 56.66)), module, V101_Dual_Envelope::GATE1_IN));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.284, 94.056)), module, V101_Dual_Envelope::GATE2_IN));
@@ -528,47 +510,23 @@ struct V101_Dual_EnvelopeWidget : ModuleWidget {
         addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(12.331, 31.159)), module, V101_Dual_Envelope::ENV1_LED));
         addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(12.331, 68.538)), module, V101_Dual_Envelope::ENV2_LED));
 
-        addParam(createParamCentered<DintreeToggle3P>(mm2px(Vec(27.569, 109.925)), module, V101_Dual_Envelope::MODE1_SW));
-        addParam(createParamCentered<DintreeToggle3P>(mm2px(Vec(50.389, 109.925)), module, V101_Dual_Envelope::MODE2_SW));
+        addParam(createParamCentered<KilpatrickToggle3P>(mm2px(Vec(27.569, 109.925)), module, V101_Dual_Envelope::MODE1_SW));
+        addParam(createParamCentered<KilpatrickToggle3P>(mm2px(Vec(50.389, 109.925)), module, V101_Dual_Envelope::MODE2_SW));
     }
 
     void appendContextMenu(Menu *menu) override {
         V101_Dual_Envelope *module = dynamic_cast<V101_Dual_Envelope*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V101_Dual_Envelope *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V101_Dual_Envelope *module = dynamic_cast<V101_Dual_Envelope*>(this->module);
         if(module) {
-            panel->visible = ((((V101_Dual_Envelope*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V101_Dual_Envelope*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }

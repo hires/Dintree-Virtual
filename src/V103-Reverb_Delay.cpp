@@ -21,7 +21,9 @@
  *
  */
 #include "plugin.hpp"
-#include "utils/dsp_utils.h"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
+#include "dsp_utils.h"
 
 struct V103_Reverb_Delay : Module {
     enum ParamIds {
@@ -63,8 +65,7 @@ struct V103_Reverb_Delay : Module {
     #define RT_TASK_RATE 100.0
     #define METER_SMOOTHING 0.9999
 
-    dsp::ClockDivider taskTimer;
-    struct ModuleDefaults module_defaults;
+    dsp::ClockDivider task_timer;
     // settings
     int AUDIO_FS;
     // delay line coeffs
@@ -121,9 +122,6 @@ struct V103_Reverb_Delay : Module {
         configParam(DEL_SW, 0.0f, 2.0f, 0.0f, "DELAY TYPE");
         configParam(REV_SW, 0.0f, 1.0f, 0.0f, "REVERB_TYPE");
 
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
-
         // reset stuff
         onReset();
         onSampleRateChange();
@@ -137,7 +135,7 @@ struct V103_Reverb_Delay : Module {
         float acc, temp1, apout, it1, lpout, hpout;
 
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
 
@@ -213,7 +211,7 @@ struct V103_Reverb_Delay : Module {
 
     // samplerate changed
     void onSampleRateChange(void) override {
-        taskTimer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
+        task_timer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
         AUDIO_FS = (int)APP->engine->getSampleRate();
     }
 
@@ -236,21 +234,6 @@ struct V103_Reverb_Delay : Module {
         feedback_samp = 0.0;
         del_len = 0;
         del_lp_z1 = 0.0;
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -464,25 +447,24 @@ struct V103_Reverb_Delay : Module {
 };
 
 struct V103_Reverb_DelayWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
     V103_Reverb_DelayWidget(V103_Reverb_Delay* module) {
         setModule(module);
-        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V103-Reverb_Delay-b.svg"));
+        theme_chooser->initPanel();
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 24.233)), module, V103_Reverb_Delay::POT_REV_MIX));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 50.924)), module, V103_Reverb_Delay::POT_DEL_MIX));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.623, 77.594)), module, V103_Reverb_Delay::POT_DEL_TIME));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.623, 24.233)), module, V103_Reverb_Delay::POT_REV_MIX));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.623, 50.924)), module, V103_Reverb_Delay::POT_DEL_MIX));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.623, 77.594)), module, V103_Reverb_Delay::POT_DEL_TIME));
 
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.324, 41.081)), module, V103_Reverb_Delay::INL));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.324, 55.475)), module, V103_Reverb_Delay::INR));
@@ -492,51 +474,26 @@ struct V103_Reverb_DelayWidget : ModuleWidget {
 
         addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(11.324, 30.159)), module, V103_Reverb_Delay::CLIP_LED));
 
-        addChild(createParamCentered<DintreeToggle3P>(mm2px(Vec(19.982, 99.798)), module, V103_Reverb_Delay::DEL_SW));
-        addChild(createParamCentered<DintreeToggle2P>(mm2px(Vec(32.682, 99.798)), module, V103_Reverb_Delay::REV_SW));
+        addChild(createParamCentered<KilpatrickToggle3P>(mm2px(Vec(19.982, 99.798)), module, V103_Reverb_Delay::DEL_SW));
+        addChild(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(32.682, 99.798)), module, V103_Reverb_Delay::REV_SW));
     }
 
     void appendContextMenu(Menu *menu) override {
         V103_Reverb_Delay *module = dynamic_cast<V103_Reverb_Delay*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V103_Reverb_Delay *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V103_Reverb_Delay *module = dynamic_cast<V103_Reverb_Delay*>(this->module);
         if(module) {
-            panel->visible = ((((V103_Reverb_Delay*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V103_Reverb_Delay*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }
 };
-
 
 Model* modelV103_Reverb_Delay = createModel<V103_Reverb_Delay, V103_Reverb_DelayWidget>("V103-Reverb_Delay");

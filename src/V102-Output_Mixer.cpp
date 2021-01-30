@@ -21,7 +21,9 @@
  *
  */
 #include "plugin.hpp"
-#include "utils/dsp_utils.h"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
+#include "dsp_utils.h"
 
 struct V102_Output_Mixer : Module {
     enum ParamIds {
@@ -71,8 +73,7 @@ struct V102_Output_Mixer : Module {
     #define METER_SMOOTHING 0.9999
 
     // state
-    dsp::ClockDivider taskTimer;
-    struct ModuleDefaults module_defaults;
+    dsp::ClockDivider task_timer;
     float master;
     float level1_l;
     float level1_r;
@@ -102,9 +103,6 @@ struct V102_Output_Mixer : Module {
         configParam(POT_PAN4, 0.f, 1.f, 0.f, "PAN 4");
         configParam(POT_MASTER, 0.f, 1.f, 0.f, "POT_MASTER");
 
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
-
         // reset stuff
         onReset();
         onSampleRateChange();
@@ -115,7 +113,7 @@ struct V102_Output_Mixer : Module {
         float outl, outr, tempf1, tempf2, tempf3, tempf4;
 
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
 
@@ -162,7 +160,7 @@ struct V102_Output_Mixer : Module {
 
     // samplerate changed
     void onSampleRateChange(void) override {
-        taskTimer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
+        task_timer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
     }
 
     // module initialize
@@ -200,21 +198,6 @@ struct V102_Output_Mixer : Module {
             sub_hist2[i] = 0.0;
         }
         setParams();
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -344,31 +327,30 @@ struct V102_Output_Mixer : Module {
 
 
 struct V102_Output_MixerWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
     V102_Output_MixerWidget(V102_Output_Mixer* module) {
         setModule(module);
-        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V102-Output_Mixer.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V102-Output_Mixer-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V102-Output_Mixer.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V102-Output_Mixer-b.svg"));
+        theme_chooser->initPanel();
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 24.255)), module, V102_Output_Mixer::POT_LEVEL1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.44, 24.255)), module, V102_Output_Mixer::POT_PAN1));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 50.904)), module, V102_Output_Mixer::POT_LEVEL2));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 50.904)), module, V102_Output_Mixer::POT_PAN2));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.58, 77.616)), module, V102_Output_Mixer::POT_LEVEL3));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 77.574)), module, V102_Output_Mixer::POT_PAN3));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(75.84, 77.616)), module, V102_Output_Mixer::POT_MASTER));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(27.579, 104.197)), module, V102_Output_Mixer::POT_LEVEL4));
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(50.461, 104.197)), module, V102_Output_Mixer::POT_PAN4));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.579, 24.255)), module, V102_Output_Mixer::POT_LEVEL1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.44, 24.255)), module, V102_Output_Mixer::POT_PAN1));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.579, 50.904)), module, V102_Output_Mixer::POT_LEVEL2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.461, 50.904)), module, V102_Output_Mixer::POT_PAN2));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.58, 77.616)), module, V102_Output_Mixer::POT_LEVEL3));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.461, 77.574)), module, V102_Output_Mixer::POT_PAN3));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(75.84, 77.616)), module, V102_Output_Mixer::POT_MASTER));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(27.579, 104.197)), module, V102_Output_Mixer::POT_LEVEL4));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(50.461, 104.197)), module, V102_Output_Mixer::POT_PAN4));
 
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 44.236)), module, V102_Output_Mixer::IN1));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(12.361, 57.571)), module, V102_Output_Mixer::IN2));
@@ -398,39 +380,15 @@ struct V102_Output_MixerWidget : ModuleWidget {
         V102_Output_Mixer *module = dynamic_cast<V102_Output_Mixer*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V102_Output_Mixer *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V102_Output_Mixer *module = dynamic_cast<V102_Output_Mixer*>(this->module);
         if(module) {
-            panel->visible = ((((V102_Output_Mixer*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V102_Output_Mixer*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }

@@ -25,6 +25,8 @@
 
 using namespace rack;
 
+#define DINTREE_THEME_FILE "Dintree-theme.json"
+
 // plugin definitions
 extern Plugin* pluginInstance;
 
@@ -39,15 +41,4 @@ extern Model* modelV107_Dual_Slew;
 extern Model* modelV201_Tri_Comparator;
 extern Model* modelV218_SH_Clock_Noise;
 
-// defaults for modules that users can store
-struct ModuleDefaults {
-    int darkTheme;
-};
-
-// load module defaults for Dintree modules
-void loadDefaults(struct ModuleDefaults *def);
-
-// save module defaults for Dintree modules
-void saveDefaults(struct ModuleDefaults *def);
-
-#include "components/DintreeComponents.hpp"
+#include "utils/KAComponents.h"

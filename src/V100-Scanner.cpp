@@ -21,6 +21,9 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
+
 #define V100_NUM_INPUTS 8
 
 // Dintree V100 Scanner module
@@ -72,19 +75,15 @@ struct V100_Scanner : Module {
     #define CLOCK_THRESH_LO 0.99
     #define RT_TASK_RATE 100.0
 
-    dsp::ClockDivider taskTimer;
+    dsp::ClockDivider task_timer;
     int chan_a, chan_b, old_chan;
     int mode, random;
     int clk_state;
-    struct ModuleDefaults module_defaults;
 
     // constructor
     V100_Scanner() {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configParam(POT_RANGE, 0.f, 1.f, 0.f, "POT_RANGE");
-
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
 
         // reset stuff
         clk_state = 0;
@@ -100,7 +99,7 @@ struct V100_Scanner : Module {
     void process(const ProcessArgs& args) override {
         float out;
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
         out = inputs[IN1 + chan_a].getVoltage();
@@ -113,28 +112,13 @@ struct V100_Scanner : Module {
 
     // samplerate changed
     void onSampleRateChange(void) override {
-        taskTimer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
+        task_timer.setDivision((int)(APP->engine->getSampleRate() / RT_TASK_RATE));
     }
 
     // module initialize
     void onReset(void) override {
         random::init();
         params[POT_RANGE].setValue(1.0);
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -211,25 +195,23 @@ struct V100_Scanner : Module {
     }
 };
 
-// widgets
 struct V100_ScannerWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
     V100_ScannerWidget(V100_Scanner* module) {
         setModule(module);
-        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V100-Scanner.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V100-Scanner-b.svg"));
+        theme_chooser->initPanel();
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-        addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::POT_RANGE));
+        addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(29.058, 26.163)), module, V100_Scanner::POT_RANGE));
 
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 19.792)), module, V100_Scanner::IN1));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(8.745, 32.492)), module, V100_Scanner::IN2));
@@ -258,47 +240,23 @@ struct V100_ScannerWidget : ModuleWidget {
         addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(17.649, 108.692)), module, V100_Scanner::IN8_LED));
         addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(37.969, 108.692)), module, V100_Scanner::OUTB_LED));
 
-        addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
-        addParam(createParamCentered<DintreeToggle2P>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
+        addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
+        addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
     }
 
     void appendContextMenu(Menu *menu) override {
         V100_Scanner *module = dynamic_cast<V100_Scanner*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V100_Scanner *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V100_Scanner *module = dynamic_cast<V100_Scanner*>(this->module);
         if(module) {
-            panel->visible = ((((V100_Scanner*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V100_Scanner*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }

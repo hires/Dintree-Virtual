@@ -21,7 +21,9 @@
  *
  */
 #include "plugin.hpp"
-#include "utils/dsp_utils.h"
+#include "dsp_utils.h"
+#include "utils/MenuHelper.h"
+#include "utils/ThemeChooser.h"
 
 struct V218_SH_Clock_Noise : Module {
 	enum ParamIds {
@@ -69,16 +71,15 @@ struct V218_SH_Clock_Noise : Module {
     #define CLOCK_SYNC_LED_PULSELEN 0.05f  // seconds
     #define SH_TRIG_LED_PULSELEN 0.05f  // seconds
     #define CLOCK_TRIG_PULSELEN 0.005f  // seconds
-    dsp::ClockDivider taskTimer;
-    struct ModuleDefaults module_defaults;
+    dsp::ClockDivider task_timer;
     float AUDIO_FS, CLOCK_FMIN, CLOCK_FMAX, SAMPLE_LEN;
     float clock_freq, clock_pa;
     int clock_trig_out_hist;  // old state of trigger out
     int clock_sync_hist;  // old state of sync in
     int sh_trig_hist;  // old state of SH trig in
-    dsp::PulseGenerator clockTrigPulseGen;
-    dsp::PulseGenerator clockSyncInGen;
-    dsp::PulseGenerator shTrigPulseGen;
+    dsp::PulseGenerator clock_trig_pulse_gen;
+    dsp::PulseGenerator clock_sync_in_gen;
+    dsp::PulseGenerator sh_trig_pulse_gen;
     float pink_state[3];
     float rand_state[3];
 
@@ -86,9 +87,6 @@ struct V218_SH_Clock_Noise : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(SH_LEVEL_POT, 0.f, 1.f, 0.f, "S&H LEVEL");
 		configParam(CLOCK_FREQ_POT, 0.0f, 1.0f, 0.f, "CLOCK FREQ");
-
-        // load module defaults from user file
-        loadDefaults(&module_defaults);
 
         // reset stuff
         onReset();
@@ -101,7 +99,7 @@ struct V218_SH_Clock_Noise : Module {
         int temp, samp;
         float tempf, wn, pn, rn;
         // state
-        if(taskTimer.process()) {
+        if(task_timer.process()) {
             setParams();
         }
 
@@ -112,11 +110,11 @@ struct V218_SH_Clock_Noise : Module {
         // trigger input
         temp = (int)(inputs[SH_TRIG_IN].getVoltage());
         if(temp && !sh_trig_hist) {
-            shTrigPulseGen.trigger(SH_TRIG_LED_PULSELEN);
+            sh_trig_pulse_gen.trigger(SH_TRIG_LED_PULSELEN);
             samp = 1;
         }
         sh_trig_hist = temp;
-        if(shTrigPulseGen.process(SAMPLE_LEN)) {
+        if(sh_trig_pulse_gen.process(SAMPLE_LEN)) {
             lights[SH_TRIG_IN_LED].setBrightness(1.0f);
         }
         else {
@@ -147,9 +145,9 @@ struct V218_SH_Clock_Noise : Module {
         temp = (int)(inputs[CLOCK_SYNC_IN].getVoltage());
         if(temp && !clock_sync_hist) {
             clock_pa = 0.0f;
-            clockSyncInGen.trigger(CLOCK_SYNC_LED_PULSELEN);
+            clock_sync_in_gen.trigger(CLOCK_SYNC_LED_PULSELEN);
         }
-        if(clockSyncInGen.process(SAMPLE_LEN)) {
+        if(clock_sync_in_gen.process(SAMPLE_LEN)) {
             lights[CLOCK_SYNC_IN_LED].setBrightness(1.0f);
         }
         else {
@@ -171,10 +169,10 @@ struct V218_SH_Clock_Noise : Module {
         lights[CLOCK_SQ_OUT_LED].setBrightness((float)temp);
         // trig out
         if(temp && !clock_trig_out_hist) {
-            clockTrigPulseGen.trigger(CLOCK_TRIG_PULSELEN);
+            clock_trig_pulse_gen.trigger(CLOCK_TRIG_PULSELEN);
         }
         clock_trig_out_hist = temp;
-        if(clockTrigPulseGen.process(SAMPLE_LEN)) {
+        if(clock_trig_pulse_gen.process(SAMPLE_LEN)) {
             outputs[CLOCK_TRIG_OUT].setVoltage(10.0f);
         }
         else {
@@ -208,7 +206,7 @@ struct V218_SH_Clock_Noise : Module {
     void onSampleRateChange(void) override {
         AUDIO_FS = APP->engine->getSampleRate();
         SAMPLE_LEN = 1.0f / AUDIO_FS;
-        taskTimer.setDivision((int)(AUDIO_FS / RT_TASK_RATE));
+        task_timer.setDivision((int)(AUDIO_FS / RT_TASK_RATE));
     }
 
     // module initialize
@@ -222,9 +220,9 @@ struct V218_SH_Clock_Noise : Module {
         clock_pa = 0.0f;
         clock_sync_hist = 0;
         clock_trig_out_hist = 0;
-        clockTrigPulseGen.reset();
-        clockSyncInGen.reset();
-        shTrigPulseGen.reset();
+        clock_trig_pulse_gen.reset();
+        clock_sync_in_gen.reset();
+        sh_trig_pulse_gen.reset();
         sh_trig_hist = 0;
         params[SH_LEVEL_POT].setValue(1.0f);
         params[CLOCK_FREQ_POT].setValue(0.5f);
@@ -234,21 +232,6 @@ struct V218_SH_Clock_Noise : Module {
         rand_state[0] = 1.0f;  // start with offset
         rand_state[1] = 1.0f;
         rand_state[2] = 1.0f;
-    }
-
-    // module randomize
-    void onRandomize(void) override {
-        // no action
-    }
-
-    // module added to engine
-    void onAdd(void) override {
-        // no action
-    }
-
-    // module removed from engine
-    void onRemove(void) override {
-        // no action
     }
 
     // set params based on input
@@ -264,24 +247,23 @@ struct V218_SH_Clock_Noise : Module {
 
 
 struct V218_SH_Clock_NoiseWidget : ModuleWidget {
-    SvgPanel* darkPanel;
+    ThemeChooser *theme_chooser;
 
 	V218_SH_Clock_NoiseWidget(V218_SH_Clock_Noise* module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise.svg")));
 
-        darkPanel = new SvgPanel();
-        darkPanel->setBackground(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise-dark.svg")));
-        darkPanel->visible = false;
-        addChild(darkPanel);
+        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
+            "Classic", asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise.svg"));
+        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise-b.svg"));
+        theme_chooser->initPanel();
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(11.4, 22.5)), module, V218_SH_Clock_Noise::SH_LEVEL_POT));
-		addParam(createParamCentered<DintreeKnobBlackRed>(mm2px(Vec(39.4, 22.5)), module, V218_SH_Clock_Noise::CLOCK_FREQ_POT));
+		addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(11.4, 22.5)), module, V218_SH_Clock_Noise::SH_LEVEL_POT));
+		addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(39.4, 22.5)), module, V218_SH_Clock_Noise::CLOCK_FREQ_POT));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(11.4, 46.5)), module, V218_SH_Clock_Noise::SH_GATE_IN));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(25.4, 46.5)), module, V218_SH_Clock_Noise::CLOCK_SYNC_IN));
@@ -313,39 +295,15 @@ struct V218_SH_Clock_NoiseWidget : ModuleWidget {
         V218_SH_Clock_Noise *module = dynamic_cast<V218_SH_Clock_Noise*>(this->module);
         assert(module);
 
-        // add theme chooser
-        MenuLabel *spacerLabel = new MenuLabel();
-        menu->addChild(spacerLabel);
-
-        MenuLabel *themeLabel = new MenuLabel();
-        themeLabel->text = "Panel Theme";
-        menu->addChild(themeLabel);
-
-        PanelThemeItem *lightItem = createMenuItem<PanelThemeItem>("Light", CHECKMARK(!module->module_defaults.darkTheme));
-        lightItem->module = module;
-        menu->addChild(lightItem);
-
-        PanelThemeItem *darkItem = createMenuItem<PanelThemeItem>("Dark", CHECKMARK(module->module_defaults.darkTheme));
-        darkItem->module = module;
-        menu->addChild(darkItem);
-
-        menu->addChild(new MenuLabel());
+        // theme chooser
+        theme_chooser->populateThemeChooserMenuItems(menu);
     }
 
-    // handle changes to the panel theme
-    struct PanelThemeItem : MenuItem {
-        V218_SH_Clock_Noise *module;
-
-        void onAction(const event::Action &e) override {
-            module->module_defaults.darkTheme ^= 0x1;
-            saveDefaults(&module->module_defaults);
-        }
-    };
-
     void step() override {
+        V218_SH_Clock_Noise *module = dynamic_cast<V218_SH_Clock_Noise*>(this->module);
         if(module) {
-            panel->visible = ((((V218_SH_Clock_Noise*)module)->module_defaults.darkTheme) == 0);
-            darkPanel->visible  = ((((V218_SH_Clock_Noise*)module)->module_defaults.darkTheme) == 1);
+            // check theme
+            theme_chooser->step();
         }
         Widget::step();
     }
