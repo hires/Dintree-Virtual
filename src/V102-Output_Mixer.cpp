@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 #include "dsp_utils.h"
@@ -94,14 +95,14 @@ struct V102_Output_Mixer : Module {
     V102_Output_Mixer() {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configParam(POT_LEVEL1, 0.f, 1.f, 0.f, "LEVEL 1");
-        configParam(POT_PAN1, 0.f, 1.f, 0.f, "PAN 1");
+        configParam(POT_PAN1, 0.f, 1.f, 0.5f, "PAN 1");
         configParam(POT_LEVEL2, 0.f, 1.f, 0.f, "LEVEL 2");
-        configParam(POT_PAN2, 0.f, 1.f, 0.f, "PAN 2");
+        configParam(POT_PAN2, 0.f, 1.f, 0.5f, "PAN 2");
         configParam(POT_LEVEL3, 0.f, 1.f, 0.f, "LEVEL 3");
-        configParam(POT_PAN3, 0.f, 1.f, 0.f, "PAN 3");
+        configParam(POT_PAN3, 0.f, 1.f, 0.5f, "PAN 3");
         configParam(POT_LEVEL4, 0.f, 1.f, 0.f, "LEVEL 4");
-        configParam(POT_PAN4, 0.f, 1.f, 0.f, "PAN 4");
-        configParam(POT_MASTER, 0.f, 1.f, 0.f, "POT_MASTER");
+        configParam(POT_PAN4, 0.f, 1.f, 0.5f, "PAN 4");
+        configParam(POT_MASTER, 0.f, 1.f, 0.5f, "POT_MASTER");
 
         // reset stuff
         onReset();
@@ -123,6 +124,12 @@ struct V102_Output_Mixer : Module {
         DSP_UTILS_DCB(inputs[IN3].getVoltage(), tempf3, in_hist[2], in_hist2[2]);
         DSP_UTILS_DCB(inputs[IN4].getVoltage(), tempf4, in_hist[3], in_hist2[3]);
 
+        // clamp inputs
+        tempf1 = DSP_UTILS_CLAMP_RANGE(tempf1, -10.0f, 10.0f);
+        tempf2 = DSP_UTILS_CLAMP_RANGE(tempf2, -10.0f, 10.0f);
+        tempf3 = DSP_UTILS_CLAMP_RANGE(tempf3, -10.0f, 10.0f);
+        tempf4 = DSP_UTILS_CLAMP_RANGE(tempf4, -10.0f, 10.0f);
+
         // channel mixing
         outl = tempf1 * level1_l;
         outl += tempf2 * level2_l;
@@ -141,6 +148,9 @@ struct V102_Output_Mixer : Module {
         // sub in
         DSP_UTILS_DCB(inputs[SUB_INL].getVoltage(), tempf1, sub_hist[0], sub_hist2[0]);
         DSP_UTILS_DCB(inputs[SUB_INR].getVoltage(), tempf2, sub_hist[1], sub_hist2[1]);
+        tempf1 = DSP_UTILS_CLAMP_RANGE(tempf1, -10.0f, 10.0f);
+        tempf2 = DSP_UTILS_CLAMP_RANGE(tempf2, -10.0f, 10.0f);
+
         outl += tempf1;
         outr += tempf2;
 
@@ -324,7 +334,6 @@ struct V102_Output_Mixer : Module {
         }
     }
 };
-
 
 struct V102_Output_MixerWidget : ModuleWidget {
     ThemeChooser *theme_chooser;

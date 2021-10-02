@@ -1,7 +1,7 @@
 {
   "slug": "Dintree-Virtual",
   "name": "Dintree",
-  "version": "1.0.14",
+  "version": "2.0.15",
   "license": "GPL-3.0-or-later",
   "brand": "Dintree",
   "author": "Andrew Kilpatrick",
@@ -104,6 +104,24 @@
       "manualUrl": "https://github.com/hires/Dintree-Virtual#V201-tri-comparator",
       "tags": [
         "Logic",
+        "Utility"
+      ]
+    },
+    {
+      "slug": "V202-Levelmeter",
+      "name": "V202 Levelmeter",
+      "description": "Audio Levelmeter",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V202-levelmeter",
+      "tags": [
+        "Utility"
+      ]
+    },
+    {
+      "slug": "V203-Test_Osc",
+      "name": "V203 Test Osc",
+      "description": "Test Oscillator with Sweep",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V203-test_osc",
+      "tags": [
         "Utility"
       ]
     },

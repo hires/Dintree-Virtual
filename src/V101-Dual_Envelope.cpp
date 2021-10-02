@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 #include "dsp_utils.h"

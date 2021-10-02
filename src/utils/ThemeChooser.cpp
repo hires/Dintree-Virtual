@@ -30,11 +30,11 @@ ThemeChooser::ThemeChooser(ModuleWidget *module_widget, std::string themeFilenam
     this->module_widget = module_widget;
     this->themeFilename = themeFilename;
     module_widget->setPanel(APP->window->loadSvg(defaultFilename));
-    panels.push_back(module_widget->panel);
+    panels.push_back(module_widget->getPanel());
     panelNames.push_back(defaultThemeName);
     theme = 0;
     selectedTheme = -1;  // disable
-    currentPanel = module_widget->panel;
+    currentPanel = module_widget->getPanel();
     changeSource = 0;
 }
 

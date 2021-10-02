@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 
@@ -115,7 +116,6 @@ struct V104_Four_Vs : Module {
         voltage4 = params[POT_VOLTAGE4].getValue();
     }
 };
-
 
 struct V104_Four_VsWidget : ModuleWidget {
     ThemeChooser *theme_chooser;

@@ -22,6 +22,7 @@
  */
 #include "plugin.hpp"
 #include "dsp_utils.h"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 
@@ -97,7 +98,6 @@ struct V107_Dual_Slew : Module {
         DSP_UTILS_F1SC(tempf * 10.0, slew2_a0);
     }
 };
-
 
 struct V107_Dual_SlewWidget : ModuleWidget {
     ThemeChooser *theme_chooser;

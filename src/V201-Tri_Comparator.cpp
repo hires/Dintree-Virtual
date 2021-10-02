@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 
@@ -307,7 +308,6 @@ struct V201_Tri_Comparator : Module {
         }
     }
 };
-
 
 struct V201_Tri_ComparatorWidget : ModuleWidget {
     ThemeChooser *theme_chooser;

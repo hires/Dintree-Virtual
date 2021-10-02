@@ -22,6 +22,7 @@
  */
 #include "plugin.hpp"
 #include "dsp_utils.h"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 
@@ -244,7 +245,6 @@ struct V218_SH_Clock_Noise : Module {
         DSP_UTILS_RLSFP(CLOCK_FMAX, CLOCK_FREQ_MAX, AUDIO_FS);
     }
 };
-
 
 struct V218_SH_Clock_NoiseWidget : ModuleWidget {
     ThemeChooser *theme_chooser;

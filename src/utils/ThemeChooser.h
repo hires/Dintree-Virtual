@@ -57,6 +57,9 @@ public:
     ThemeChooser(ModuleWidget *module_widget, std::string themeFilename,
             std::string defaultThemeName, const std::string& defaultFilename);
 
+    // destructor
+    virtual ~ThemeChooser() { }
+
     // add a panel to choose
     void addPanel(std::string themeName, const std::string& filename);
 

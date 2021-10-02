@@ -5,12 +5,31 @@
  * Copyright 2020: Andrew Kilpatrick
  *
  */
- #include "../plugin.hpp"
+#include "../plugin.hpp"
 #include "MenuHelper.h"
+#include <thread>
+
+// website browser launcher
+MenuHelperUrlItem::MenuHelperUrlItem(std::string text, std::string url) {
+    this->text = text;
+    this->url = url;
+    this->rightText = "";
+}
+
+// the menu item was selected
+void MenuHelperUrlItem::onAction(const event::Action& e) {
+	std::thread t(system::openBrowser, url);
+	t.detach();
+}
 
 // add a spacer to a menu
 void menuHelperAddSpacer(Menu *menu) {
     menu->addChild(new MenuLabel());
+}
+
+// add text to a menu
+void menuHelperAddText(Menu *menu, std::string text) {
+    menu->addChild(createMenuItem(text, ""));
 }
 
 // add a label to a menu

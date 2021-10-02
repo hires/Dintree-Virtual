@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 #include "dsp_utils.h"
@@ -103,7 +104,8 @@ struct V103_Reverb_Delay : Module {
     float del_synco_t1;
     float del_synco_t2;
     // state
-    float dmem[1024*1024];
+    #define DMEM_SIZE (1024*1024)
+    float dmem[DMEM_SIZE];
     int dlen;  // delay memory length (must be a power of 2)
     int dp;  // delay memory pointer
     // working regs
@@ -217,6 +219,9 @@ struct V103_Reverb_Delay : Module {
 
     // module initialize
     void onReset(void) override {
+        for(int i = 0; i < DMEM_SIZE; i ++) {
+            dmem[i] = 0.0f;
+        }
         random::init();
         params[POT_REV_MIX].setValue(0.5);
         params[POT_DEL_MIX].setValue(0.5);

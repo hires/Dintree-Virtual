@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 
@@ -74,7 +75,6 @@ struct V100_Scanner : Module {
     #define CLOCK_THRESH_HI 1.01
     #define CLOCK_THRESH_LO 0.99
     #define RT_TASK_RATE 100.0
-
     dsp::ClockDivider task_timer;
     int chan_a, chan_b, old_chan;
     int mode, random;

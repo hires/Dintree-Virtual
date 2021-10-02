@@ -34,6 +34,9 @@
 #define DSP_UTILS_CLAMP_POS(x) (((x) > (1.0)) ? (1.0) : \
     (((x) < (0.0)) ? (0.0) : (x)))
 
+#define DSP_UTILS_CLAMP_RANGE(x, min, max) (((x) > (max)) ? (max) : \
+    (((x) < (min)) ? (min) : (x)))
+
 #define DSP_UTILS_LMM(in, out, sm) \
 do { \
     if((in) > (out)) { \

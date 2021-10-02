@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 #include "utils/ThemeChooser.h"
 
@@ -123,7 +124,6 @@ struct V105_Quad_CV_Proc : Module {
         gain4 = params[POT_GAIN4].getValue() * 2.0;
     }
 };
-
 
 struct V105_Quad_CV_ProcWidget : ModuleWidget {
     ThemeChooser *theme_chooser;
