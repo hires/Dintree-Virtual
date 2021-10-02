@@ -286,9 +286,6 @@ slightly different offsets. This can create interesting effects with filters.
 
 
 
-
-
-
 </pre>
 
 ----
@@ -341,6 +338,12 @@ exact dB values. The V202 is a peak reading meter with 0.0dBFS normalized to 10V
 high-pass filter set at 10Hz to strip out DC which can ruin the measurement of small signals.
 
 <pre>
+
+
+
+
+
+
 
 
 
