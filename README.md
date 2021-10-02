@@ -289,11 +289,6 @@ slightly different offsets. This can create interesting effects with filters.
 
 
 
-
-
-
-
-
 </pre>
 
 ----
@@ -345,28 +340,22 @@ The V202 Levelmeter is a useful tool especially for development. I often wanted 
 exact dB values. The V202 is a peak reading meter with 0.0dBFS normalized to 10Vpk. (20Vpp) There is a two-pole
 high-pass filter set at 10Hz to strip out DC which can ruin the measurement of small signals.
 
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
 
 ----
 ### V203 Test Osc
