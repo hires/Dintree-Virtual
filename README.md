@@ -274,28 +274,27 @@ octave when used with a V/oct type of CV signal. Another use is for making a
 simple lag processor to convert a single CV into multiple versions that have
 slightly different offsets. This can create interesting effects with filters.
 
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
 
 ----
 ### V201 Tri Comparator
