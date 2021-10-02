@@ -414,22 +414,6 @@ The connections and controls are as follows:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </pre>
 
 ----
