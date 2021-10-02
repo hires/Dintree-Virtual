@@ -409,13 +409,6 @@ The connections and controls are as follows:
   - **4** = SR
 - **RESET** - resets the stick to the centre position
 
-<pre>
-
-
-
-
-</pre>
-
 ----
 ### V218 S&H / Clock / Noise Generator
 **Sample and Hold, Clock and Noise Generator**
