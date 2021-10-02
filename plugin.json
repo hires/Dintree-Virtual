@@ -110,7 +110,7 @@
     {
       "slug": "V202-Levelmeter",
       "name": "V202 Levelmeter",
-      "description": "Audio Levelmeter",
+      "description": "Stereo Audio Levelmeter",
       "manualUrl": "https://github.com/hires/Dintree-Virtual#V202-levelmeter",
       "tags": [
         "Utility"

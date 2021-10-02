@@ -56,7 +56,7 @@ std::string factorToDbStr(float val) {
 std::string factorToDbStr1(float val) {
     char tempstr[64];
 //    float tempf = 20.0f * log10f(val + PUTILS_VSN);
-    float tempf = roundf(dsp2::factorToDb(val));
+    float tempf = dsp2::factorToDb(val);
     if(fabs(tempf) < 0.05f) {
         tempf = 0.0f;
     }

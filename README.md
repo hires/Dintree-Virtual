@@ -337,6 +337,38 @@ processor or other type of filter to slow down very fast signals so they will cr
 more interesting outputs, especially when using the equal and not equal functions.
 
 ----
+### V202 Levelmeter
+**Stereo Audio Levelmeter**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V202-Levelmeter.png" />
+
+The V202 Levelmeter is a useful tool especially for development. I often wanted to test signals and read out
+exact dB values. The V202 is a peak reading meter with 0.0dBFS normalized to 10Vpk. (20Vpp) There is a two-pole
+high-pass filter set at 10Hz to strip out DC which can ruin the measurement of small signals.
+
+----
+### V203 Test Osc
+**Test Oscillator with Sweep**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V203-Test_Osc.png" />
+
+The V203 Test Osc can generate useful test tones for development or alignment purposes. The output can sweep
+a sine wave across the audio band and this can be triggered by an external CV trigger signal.
+
+The functions and controls are as follows:
+
+- **LEVEL** - Sets the absolute output level where 0dB equals an output of 10Vpk. (20Vpp)
+- **FREQ** - Sets the frequency when in sine wave mode. (not sweeping)
+- **SPEED** - Sets the sweep speed for *LOG* or *LIN* mode. The set speed in seconds is shown on the display. A percentage of sweep completion will also be displayed when sweeping.
+- **TONE** - Set the output tone to *SINE*, *WH* (white noise), or *PK*. (pink noise) The pink noise source is approximated with a series of low-pass filter. Please check the spectra before using it for high precision tasks.
+- **SWEEP** - Sets the sweep mode either *OFF*, *LOG* (log sweep) or *LIN*. (linear sweep)
+- **STEP** - Sets the frequency step size for the sine output when using manual frequency setting. Choices are *3RD*, (3rd octave steps), *OCT* (octave steps) and *LOG* which goes by semitone.
+- **TRIG** - Button and CV input jack. Starts a sweep or momentarily produces output.
+- **ON** - Sets the unit into either *MOM* (momentary) or continuous *ON* mode.
+
+Note that the *REF* level displayed is a convenience feature. You can scroll your middle mouse button over the display to adjust it relative to the ABS value.
+
+----
 ### V218 S&H / Clock / Noise Generator
 **Sample and Hold, Clock and Noise Generator**
 
