@@ -24,7 +24,6 @@
 #include "dsp_utils.h"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 
 struct V218_SH_Clock_Noise : Module {
 	enum ParamIds {
@@ -247,15 +246,9 @@ struct V218_SH_Clock_Noise : Module {
 };
 
 struct V218_SH_Clock_NoiseWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
 	V218_SH_Clock_NoiseWidget(V218_SH_Clock_Noise* module) {
 		setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V218-SH_Clock_Noise.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -290,23 +283,6 @@ struct V218_SH_Clock_NoiseWidget : ModuleWidget {
 		addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(25.4, 100.5)), module, V218_SH_Clock_Noise::CLOCK_SQ_OUT_LED));
 		addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(39.4, 100.5)), module, V218_SH_Clock_Noise::NOISE_R_OUT_LED));
 	}
-
-    void appendContextMenu(Menu *menu) override {
-        V218_SH_Clock_Noise *module = dynamic_cast<V218_SH_Clock_Noise*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V218_SH_Clock_Noise *module = dynamic_cast<V218_SH_Clock_Noise*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
-    }
 };
 
 Model* modelV218_SH_Clock_Noise = createModel<V218_SH_Clock_Noise, V218_SH_Clock_NoiseWidget>("V218-SH-Clock-Noise");

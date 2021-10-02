@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 #include "dsp_utils.h"
 
 struct V103_Reverb_Delay : Module {
@@ -452,15 +451,9 @@ struct V103_Reverb_Delay : Module {
 };
 
 struct V103_Reverb_DelayWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
     V103_Reverb_DelayWidget(V103_Reverb_Delay* module) {
         setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V103-Reverb_Delay-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V103-Reverb_Delay.svg")));
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -481,23 +474,6 @@ struct V103_Reverb_DelayWidget : ModuleWidget {
 
         addChild(createParamCentered<KilpatrickToggle3P>(mm2px(Vec(19.982, 99.798)), module, V103_Reverb_Delay::DEL_SW));
         addChild(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(32.682, 99.798)), module, V103_Reverb_Delay::REV_SW));
-    }
-
-    void appendContextMenu(Menu *menu) override {
-        V103_Reverb_Delay *module = dynamic_cast<V103_Reverb_Delay*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V103_Reverb_Delay *module = dynamic_cast<V103_Reverb_Delay*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
     }
 };
 

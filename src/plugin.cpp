@@ -37,5 +37,6 @@ void init(Plugin* p) {
     p->addModel(modelV201_Tri_Comparator);
     p->addModel(modelV202_Levelmeter);
     p->addModel(modelV203_Test_Osc);
+    p->addModel(modelV204_Quad_Panner);
     p->addModel(modelV218_SH_Clock_Noise);
 }

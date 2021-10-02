@@ -10,6 +10,7 @@
 
 #include "../plugin.hpp"  // used for settings
 #include "componentlibrary.hpp"
+#include "PLog.h"
 #include "PUtils.h"
 #ifdef BGFX
 #warning BGFX defined - implementing platform code
@@ -693,7 +694,7 @@ struct KilpatrickFramebufferRGB565 : widget::TransparentWidget, BGfxScreen {
     }
 };
 
-// signal red/green LED mapper
+// bipolar signal red/green LED mapper
 inline void KARedGreenLEDMap(Light& lightR, Light& lightG, float level) {
     lightR.setBrightness(putils::clampf(-level, 0.0f, 1.0f));  // red
     lightG.setBrightness(putils::clampf(level, 0.0f, 1.0f));  // green
@@ -802,6 +803,62 @@ struct KALevelmeter {
         }
 
 		nvgRestore(args.vg);
+    }
+};
+
+// handler for joystick movement
+struct KilpatrickJoystickHandler {
+    // handle the joystick position
+    virtual void updateJoystick(int id, float xPos, float yPos) { }
+
+    // check if the reset button has been pressed
+    virtual int resetJoystick(void) { return 0; }
+};
+
+// a custom label
+struct KilpatrickJoystick : widget::OpaqueWidget {
+    int id;
+    KilpatrickJoystickHandler *handler = NULL;
+    NVGcolor bgColor;
+    NVGcolor knobColor;
+    float xPos = 0.0f;
+    float yPos = 0.0f;
+    float moveScale;
+
+    // create a new label
+    KilpatrickJoystick(int id, math::Vec pos, math::Vec size) {
+        this->id = id;
+        bgColor = nvgRGBA(0x33, 0x33, 0x33, 0xff);
+        knobColor = nvgRGBA(0xff, 0x00, 0x00, 0xff);
+        box.pos = pos.minus(size.div(2));
+        box.size = size;
+        moveScale = 1.0 / box.size.x;
+    }
+
+    void draw(const DrawArgs& args) override {
+        Widget::draw(args);
+
+        if(handler && handler->resetJoystick()) {
+            xPos = 0.0f;
+            yPos = 0.0f;
+            handler->updateJoystick(id, xPos, -yPos);
+        }
+
+    	nvgBeginPath(args.vg);
+        nvgEllipse(args.vg, (box.size.x * 0.5) + (xPos * box.size.x * 0.5),
+            (box.size.y * 0.5) + (yPos * box.size.y * 0.5), 10.0, 10.0);
+    	nvgFillColor(args.vg, knobColor);
+    	nvgFill(args.vg);
+    }
+
+	void onDragHover(const event::DragHover& e) override {
+        Widget::onDragHover(e);
+        xPos = putils::clampf(xPos + (e.mouseDelta.x * moveScale), -1.0f, 1.0f);
+        yPos = putils::clampf(yPos + (e.mouseDelta.y * moveScale), -1.0f, 1.0f);
+        e.consume(this);
+        if(handler) {
+            handler->updateJoystick(id, xPos, -yPos);
+        }
     }
 };
 

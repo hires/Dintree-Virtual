@@ -25,8 +25,6 @@
 
 using namespace rack;
 
-#define DINTREE_THEME_FILE "Dintree-theme.json"
-
 // plugin definitions
 extern Plugin* pluginInstance;
 
@@ -41,6 +39,7 @@ extern Model* modelV107_Dual_Slew;
 extern Model* modelV201_Tri_Comparator;
 extern Model* modelV202_Levelmeter;
 extern Model* modelV203_Test_Osc;
+extern Model* modelV204_Quad_Panner;
 extern Model* modelV218_SH_Clock_Noise;
 
 #define PLATFORM_VCV

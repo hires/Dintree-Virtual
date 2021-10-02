@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 
 struct V105_Quad_CV_Proc : Module {
     enum ParamIds {
@@ -126,15 +125,9 @@ struct V105_Quad_CV_Proc : Module {
 };
 
 struct V105_Quad_CV_ProcWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
     V105_Quad_CV_ProcWidget(V105_Quad_CV_Proc* module) {
         setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V105-Quad_CV_Proc.svg")));
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -163,23 +156,6 @@ struct V105_Quad_CV_ProcWidget : ModuleWidget {
         addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(54.272, 84.219)), module, V105_Quad_CV_Proc::OUT3M));
         addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(54.272, 97.575)), module, V105_Quad_CV_Proc::OUT4P));
         addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(54.272, 110.91)), module, V105_Quad_CV_Proc::OUT4M));
-    }
-
-    void appendContextMenu(Menu *menu) override {
-        V105_Quad_CV_Proc *module = dynamic_cast<V105_Quad_CV_Proc*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V105_Quad_CV_Proc *module = dynamic_cast<V105_Quad_CV_Proc*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
     }
 };
 

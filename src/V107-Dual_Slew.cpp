@@ -24,7 +24,6 @@
 #include "dsp_utils.h"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 
 struct V107_Dual_Slew : Module {
 	enum ParamIds {
@@ -100,15 +99,9 @@ struct V107_Dual_Slew : Module {
 };
 
 struct V107_Dual_SlewWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
 	V107_Dual_SlewWidget(V107_Dual_Slew* module) {
 		setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V107-Dual_Slew.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V107-Dual_Slew-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V107-Dual_Slew.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -124,23 +117,6 @@ struct V107_Dual_SlewWidget : ModuleWidget {
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.684, 95.776)), module, V107_Dual_Slew::OUT1));
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(12.684, 111.228)), module, V107_Dual_Slew::OUT2));
 	}
-
-    void appendContextMenu(Menu *menu) override {
-        V107_Dual_Slew *module = dynamic_cast<V107_Dual_Slew*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V107_Dual_Slew *module = dynamic_cast<V107_Dual_Slew*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
-    }
 };
 
 Model* modelV107_Dual_Slew = createModel<V107_Dual_Slew, V107_Dual_SlewWidget>("V107-Dual_Slew");

@@ -383,6 +383,56 @@ The functions and controls are as follows:
 Note that the *REF* level displayed is a convenience feature. You can scroll your middle mouse button over the display to adjust it relative to the ABS value.
 
 ----
+### V204 Quad Panner
+**Quad Panner with CV Control**
+
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V204-Quad_Panner.png" />
+
+The V204 Quad Panner is a mono input quadraphonic panner that uses a fake on-screen joystick (not that great) or a pair
+of X and Y CV inputs. The panning uses a quasi-constant power law whereby the middle position will be 3dB down in each
+direction. For instance, full front and centre will be 3dB down in front left and front right outputs. The centre stick
+position will be 6dB down in all four channels. This is unlike the basic pan pot law of 6dB down.
+
+The connections and controls are as follows:
+
+- **FL** - front left output
+- **FR** - front right output
+- **SL** - surround left output
+- **SR** - surround right output
+- **IN** - signal input
+- **X** - X panning CV input - -5V to +5V deflects fully when the stick is in the middle position
+- **Y** - Y panning CV input - -5V to +5V deflects fully when the stick is in the middle position
+- **MULTI** - polyphonic cable output carrying four channels:
+  - **1** = FL
+  - **2** = FR
+  - **3** = SL
+  - **4** = SR
+- **RESET** - resets the stick to the centre position
+
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+----
 ### V218 S&H / Clock / Noise Generator
 **Sample and Hold, Clock and Noise Generator**
 

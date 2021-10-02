@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 
 // Dintree V201 Tri Comparator module
 struct V201_Tri_Comparator : Module {
@@ -310,15 +309,9 @@ struct V201_Tri_Comparator : Module {
 };
 
 struct V201_Tri_ComparatorWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
 	V201_Tri_ComparatorWidget(V201_Tri_Comparator* module) {
 		setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V201-Tri_Comparator.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V201-Tri_Comparator-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V201-Tri_Comparator.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -368,23 +361,6 @@ struct V201_Tri_ComparatorWidget : ModuleWidget {
         addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(23.48, 101.0)), module, V201_Tri_Comparator::IN_B_LED));
         addChild(createLightCentered<MediumLight<RedGreenBlueLight>>(mm2px(Vec(37.48, 101.0)), module, V201_Tri_Comparator::IN_C_LED));
 	}
-
-    void appendContextMenu(Menu *menu) override {
-        V201_Tri_Comparator *module = dynamic_cast<V201_Tri_Comparator*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V201_Tri_Comparator *module = dynamic_cast<V201_Tri_Comparator*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
-    }
 };
 
 Model* modelV201_Tri_Comparator = createModel<V201_Tri_Comparator, V201_Tri_ComparatorWidget>("V201-Tri_Comparator");

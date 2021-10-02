@@ -1,15 +1,29 @@
 /*
- * Levelmeter
+ * Dintree V204 Levelmeter
  *
- * Copyright 2021: Kilpatrick Audio
  * Written by: Andrew Kilpatrick
+ * Copyright 2021: Andrew Kilpatrick
+ *
+ * This file is part of Dintree-Virtual.
+ *
+ * Dintree-Virtual is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dintree-Virtual is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Dintree-Virtual.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #include "plugin.hpp"
 #include "utils/DspUtils2.h"
 #include "utils/KAComponents.h"
 #include "utils/PUtils.h"
-#include "utils/ThemeChooser.h"
 
 // levelmeter display source
 struct LevelmeterDisplaySource {
@@ -173,14 +187,9 @@ struct LevelmeterDisplay : widget::TransparentWidget {
 };
 
 struct V202_LevelmeterWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
 	V202_LevelmeterWidget(V202_Levelmeter* module) {
 		setModule(module);
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V202-Levelmeter.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V202-Levelmeter-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V202-Levelmeter.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
@@ -192,23 +201,6 @@ struct V202_LevelmeterWidget : ModuleWidget {
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(15.24, 94.5)), module, V202_Levelmeter::IN_L));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(15.24, 108.5)), module, V202_Levelmeter::IN_R));
 	}
-    
-    void appendContextMenu(Menu *menu) override {
-        V202_Levelmeter *module = dynamic_cast<V202_Levelmeter*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V202_Levelmeter *module = dynamic_cast<V202_Levelmeter*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
-    }
 };
 
 Model* modelV202_Levelmeter = createModel<V202_Levelmeter, V202_LevelmeterWidget>("V202-Levelmeter");

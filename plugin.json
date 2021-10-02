@@ -126,6 +126,15 @@
       ]
     },
     {
+      "slug": "V204-Quad_Panner",
+      "name": "V204 Quad Panner",
+      "description": "Quad Panner",
+      "manualUrl": "https://github.com/hires/Dintree-Virtual#V204-quad_panner",
+      "tags": [
+        "Panning"
+      ]
+    },
+    {
       "slug": "V218-SH-Clock-Noise",
       "name": "V218 SH Clock Noise",
       "description": "Sample and Hold, Clock and Noise Generator",

@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 #include "dsp_utils.h"
 
 struct V102_Output_Mixer : Module {
@@ -336,15 +335,9 @@ struct V102_Output_Mixer : Module {
 };
 
 struct V102_Output_MixerWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
     V102_Output_MixerWidget(V102_Output_Mixer* module) {
         setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V102-Output_Mixer.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V102-Output_Mixer-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V102-Output_Mixer.svg")));
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -383,23 +376,6 @@ struct V102_Output_MixerWidget : ModuleWidget {
         addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 47.073)), module, V102_Output_Mixer::LED_METERR_M12));
         addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(72.051, 54.692)), module, V102_Output_Mixer::LED_METERL_M18));
         addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(79.692, 54.692)), module, V102_Output_Mixer::LED_METERR_M18));
-    }
-
-    void appendContextMenu(Menu *menu) override {
-        V102_Output_Mixer *module = dynamic_cast<V102_Output_Mixer*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V102_Output_Mixer *module = dynamic_cast<V102_Output_Mixer*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
     }
 };
 

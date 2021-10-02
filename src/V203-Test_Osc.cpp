@@ -1,15 +1,29 @@
 /*
- * Vocalami DSP
+ * Dintree V203 Test Osc
  *
- * Copyright 2021: Kilpatrick Audio
  * Written by: Andrew Kilpatrick
+ * Copyright 2021: Andrew Kilpatrick
+ *
+ * This file is part of Dintree-Virtual.
+ *
+ * Dintree-Virtual is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dintree-Virtual is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Dintree-Virtual.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #include "plugin.hpp"
 #include "utils/DspUtils2.h"
 #include "utils/KAComponents.h"
 #include "utils/PUtils.h"
-#include "utils/ThemeChooser.h"
 
 // test osc display source
 struct TestOscDisplaySource {
@@ -484,14 +498,9 @@ struct TestOscDisplay : widget::TransparentWidget {
 };
 
 struct V203_Test_OscWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
 	V203_Test_OscWidget(V203_Test_Osc* module) {
 		setModule(module);
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V203-Test_Osc.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V203-Test_Osc-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V203-Test_Osc.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -516,23 +525,6 @@ struct V203_Test_OscWidget : ModuleWidget {
 
         addChild(createLightCentered<MediumLight<RedLight>>(mm2px(Vec(18.32, 106.15)), module, V203_Test_Osc::TRIG_IN_LED));
 	}
-
-    void appendContextMenu(Menu *menu) override {
-        V203_Test_Osc *module = dynamic_cast<V203_Test_Osc*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V203_Test_Osc *module = dynamic_cast<V203_Test_Osc*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
-    }
 };
 
 Model* modelV203_Test_Osc = createModel<V203_Test_Osc, V203_Test_OscWidget>("V203-Test_Osc");

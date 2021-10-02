@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 
 #define V100_NUM_INPUTS 8
 
@@ -196,15 +195,9 @@ struct V100_Scanner : Module {
 };
 
 struct V100_ScannerWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
     V100_ScannerWidget(V100_Scanner* module) {
         setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V100-Scanner.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V100-Scanner-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V100-Scanner.svg")));
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -242,23 +235,6 @@ struct V100_ScannerWidget : ModuleWidget {
 
         addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(29.079, 46.192)), module, V100_Scanner::RAND_SW));
         addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(29.079, 65.242)), module, V100_Scanner::CV_SW));
-    }
-
-    void appendContextMenu(Menu *menu) override {
-        V100_Scanner *module = dynamic_cast<V100_Scanner*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V100_Scanner *module = dynamic_cast<V100_Scanner*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
     }
 };
 

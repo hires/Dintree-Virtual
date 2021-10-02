@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 #include "dsp_utils.h"
 
 struct V101_Dual_Envelope : Module {
@@ -478,15 +477,9 @@ struct V101_Dual_Envelope : Module {
 };
 
 struct V101_Dual_EnvelopeWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
     V101_Dual_EnvelopeWidget(V101_Dual_Envelope* module) {
         setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V101-Dual_Envelope.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V101-Dual_Envelope-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V101-Dual_Envelope.svg")));
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -513,23 +506,6 @@ struct V101_Dual_EnvelopeWidget : ModuleWidget {
 
         addParam(createParamCentered<KilpatrickToggle3P>(mm2px(Vec(27.569, 109.925)), module, V101_Dual_Envelope::MODE1_SW));
         addParam(createParamCentered<KilpatrickToggle3P>(mm2px(Vec(50.389, 109.925)), module, V101_Dual_Envelope::MODE2_SW));
-    }
-
-    void appendContextMenu(Menu *menu) override {
-        V101_Dual_Envelope *module = dynamic_cast<V101_Dual_Envelope*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V101_Dual_Envelope *module = dynamic_cast<V101_Dual_Envelope*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
     }
 };
 

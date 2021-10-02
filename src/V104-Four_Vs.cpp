@@ -23,7 +23,6 @@
 #include "plugin.hpp"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
-#include "utils/ThemeChooser.h"
 
 struct V104_Four_Vs : Module {
     enum ParamIds {
@@ -118,15 +117,9 @@ struct V104_Four_Vs : Module {
 };
 
 struct V104_Four_VsWidget : ModuleWidget {
-    ThemeChooser *theme_chooser;
-
     V104_Four_VsWidget(V104_Four_Vs* module) {
         setModule(module);
-
-        theme_chooser = new ThemeChooser(this, DINTREE_THEME_FILE,
-            "Classic", asset::plugin(pluginInstance, "res/V104-Four_Vs.svg"));
-        theme_chooser->addPanel("Dark", asset::plugin(pluginInstance, "res/V104-Four_Vs-b.svg"));
-        theme_chooser->initPanel();
+        setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V104-Four_Vs.svg")));
 
         addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
         addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -145,23 +138,6 @@ struct V104_Four_VsWidget : ModuleWidget {
 
         addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(12.345, 24.233)), module, V104_Four_Vs::ON1_SW));
         addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(12.345, 50.903)), module, V104_Four_Vs::ON2_SW));
-    }
-
-    void appendContextMenu(Menu *menu) override {
-        V104_Four_Vs *module = dynamic_cast<V104_Four_Vs*>(this->module);
-        assert(module);
-
-        // theme chooser
-        theme_chooser->populateThemeChooserMenuItems(menu);
-    }
-
-    void step() override {
-        V104_Four_Vs *module = dynamic_cast<V104_Four_Vs*>(this->module);
-        if(module) {
-            // check theme
-            theme_chooser->step();
-        }
-        Widget::step();
     }
 };
 
