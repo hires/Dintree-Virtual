@@ -138,15 +138,14 @@ struct KilpatrickButton : SvgSwitch {
     }
 
     void onDeselect(const event::Deselect& e) override {
-        SvgSwitch::onDeselect(e);
         if(handler) {
             handler->buttonDeselect(id, armed);
         }
         armed = 0;
+        SvgSwitch::onDeselect(e);
     }
 
     void onButton(const event::Button& e) override {
-        SvgSwitch::onButton(e);
         if(e.action == GLFW_PRESS) {
             if(armable && mapKey) {
                 armed = 1;
@@ -155,22 +154,23 @@ struct KilpatrickButton : SvgSwitch {
                 handler->buttonLatchToggle(id);
             }
         }
+        SvgSwitch::onButton(e);
     }
 
     void onHoverKey(const event::HoverKey& e) override {
-        SvgSwitch::onHoverKey(e);
         if(e.key == GLFW_KEY_M) {
             mapKey = 1;
         }
         else if(e.key == GLFW_KEY_L) {
             latchKey = 1;
         }
+        SvgSwitch::onHoverKey(e);
     }
 
     void onLeave(const event::Leave& e) override {
-        SvgSwitch::onLeave(e);
         mapKey = 0;
         latchKey = 0;
+        SvgSwitch::onLeave(e);
     }
 };
 
@@ -259,32 +259,32 @@ struct KilpatrickKnob : SvgKnob {
     }
 
     void onDeselect(const event::Deselect& e) override {
-        SvgKnob::onDeselect(e);
         if(handler) {
             handler->knobDeselect(id, armed);
         }
         armed = 0;
+        SvgKnob::onDeselect(e);
     }
 
     void onButton(const event::Button& e) override {
-        SvgKnob::onButton(e);
         if(e.action == GLFW_PRESS) {
             if(armable && mapKey) {
                 armed = 1;
             }
         }
+        SvgKnob::onButton(e);
     }
 
     void onHoverKey(const event::HoverKey& e) override {
-        SvgKnob::onHoverKey(e);
         if(e.key == GLFW_KEY_M) {
             mapKey = 1;
         }
+        SvgKnob::onHoverKey(e);
     }
 
     void onLeave(const event::Leave& e) override {
-        SvgKnob::onLeave(e);
         mapKey = 0;
+        SvgKnob::onLeave(e);
     }
 };
 
@@ -383,32 +383,32 @@ struct KilpatrickSlidePot : app::SvgSlider {
     }
 
     void onDeselect(const event::Deselect& e) override {
-        SvgSlider::onDeselect(e);
         if(handler) {
             handler->sliderDeselect(id, armed);
         }
         armed = 0;
+        SvgSlider::onDeselect(e);
     }
 
     void onButton(const event::Button& e) override {
-        SvgSlider::onButton(e);
         if(e.action == GLFW_PRESS) {
             if(armable && mapKey) {
                 armed = 1;
             }
         }
+        SvgSlider::onButton(e);
     }
 
     void onHoverKey(const event::HoverKey& e) override {
-        SvgSlider::onHoverKey(e);
         if(e.key == GLFW_KEY_M) {
             mapKey = 1;
         }
+        SvgSlider::onHoverKey(e);
     }
 
     void onLeave(const event::Leave& e) override {
-        SvgSlider::onLeave(e);
         mapKey = 0;
+        SvgSlider::onLeave(e);
     }
 };
 
@@ -480,10 +480,8 @@ struct KilpatrickLabel : widget::TransparentWidget {
         	nvgFillColor(args.vg, fgColor);
             nvgTextAlign(args.vg, hAlign | vAlign);
             nvgTextBoxBounds(args.vg, 0.0, 0.0, box.size.x, text.c_str(), NULL, pos);
-//            PDEBUG("box - 0: %f - 1: %f - 2: %f - 3: %f", pos[0], pos[1], pos[2], pos[3]);
             xPos = (box.size.x - pos[2] - pos[0]) * 0.5f;
             yPos = (box.size.y - pos[3] - pos[1]) * 0.5f;
-//            nvgTextBox(args.vg, 0.0, (box.size.y - h) * 0.5, box.size.x, text.c_str(), NULL);
             nvgTextBox(args.vg, xPos, yPos, box.size.x, text.c_str(), NULL);
         }
     }
@@ -492,7 +490,6 @@ struct KilpatrickLabel : widget::TransparentWidget {
         if(handler) {
             handler->onButton(id, e);
             e.consume(NULL);
-            return;
         }
         TransparentWidget::onButton(e);
     }
@@ -501,7 +498,6 @@ struct KilpatrickLabel : widget::TransparentWidget {
         if(handler) {
             handler->onHoverScroll(id, e);
             e.consume(NULL);
-            return;
         }
         TransparentWidget::onHoverScroll(e);
     }
@@ -703,13 +699,10 @@ inline void KARedGreenLEDMap(Light& lightR, Light& lightG, float level) {
     lightG.setBrightness(putils::clampf(level, 0.0f, 1.0f));  // green
 }
 
-struct KASignalLED {
-
-};
-
 // levelmeter
 struct KALevelmeter {
     NVGcolor textColor;
+    NVGcolor textRefColor;
     NVGcolor bgColor;
     NVGcolor barColor;
     NVGcolor peakColor;
@@ -722,13 +715,20 @@ struct KALevelmeter {
     float fontSizeReadout;  // size of the dB readout
     float readoutH;  // height of readout box
     int drawReadout;  // 1 = draw the level readout under the bar
+    float refLevel;  // reference adjustment level
+    int refLevelChangeTime = 10;  // timeout for showing ref level when changed - divided by textSlowdownCount
     // running state
     float level;  // dB level -96.0f to 0.0f
     float peak;  // dB level -96.0f to 0.0f
+    int textSlowCount = 0;
+    int textSlowdown = 0;  // slowdown level (0 = disable)
+    char peakStr[64];
+    int refLevelChangeTimeout = 0;
 
     // constructor
     KALevelmeter() {
         textColor = nvgRGBA(0xff, 0xff, 0xff, 0xff);
+        textRefColor = nvgRGBA(0xff, 0x00, 0x00, 0xff);
         bgColor = nvgRGBA(0x33, 0x33, 0x33, 0xff);
         barColor = nvgRGBA(0x00, 0xe0, 0x00, 0xff);
         peakColor = nvgRGBA(0xe0, 0x00, 0x00, 0xff);
@@ -739,9 +739,11 @@ struct KALevelmeter {
         size.x = 5.0f;
         size.y = 100.0f;
         fontFilename = asset::plugin(pluginInstance, "res/components/fixedsys.ttf");
-        fontSizeReadout = 9.0f;
+        fontSizeReadout = 9.5f;
         drawReadout = 1;
         readoutH = 12.0f;
+        refLevel = 0.0f;
+        sprintf(peakStr, " ");
     }
 
     // set the levels
@@ -756,9 +758,16 @@ struct KALevelmeter {
         dbScale = size.y / -this->minLevel;
     }
 
+    // set the reference level
+    void setRefLevel(float level) {
+        if(level != refLevel) {
+            refLevelChangeTimeout = refLevelChangeTime;
+        }
+        refLevel = level;
+    }
+
     // draw - the background must be cleared
     void draw(const widget::Widget::DrawArgs& args) {
-        char tempstr[64];
         float tempf;
 
 		nvgSave(args.vg);
@@ -775,12 +784,26 @@ struct KALevelmeter {
 
             nvgTextAlign(args.vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
             nvgFontFaceId(args.vg, font->handle);
-            nvgFillColor(args.vg, textColor);
+            if(refLevel != 0) {
+                nvgFillColor(args.vg, textRefColor);
+            }
+            else {
+                nvgFillColor(args.vg, textColor);
+            }
             nvgFontSize(args.vg, fontSizeReadout);
 
-            // sample peak text
-            sprintf(tempstr, "%3.1f", level);
-            nvgText(args.vg, size.x * 0.5f, (readoutH * 0.5f), tempstr, NULL);
+            textSlowCount ++;
+            if(textSlowCount > textSlowdown) {
+                if(refLevelChangeTimeout) {
+                    refLevelChangeTimeout --;
+                    sprintf(peakStr, "%3.1f", refLevel);
+                }
+                else {
+                    sprintf(peakStr, "%3.1f", level + refLevel);
+                }
+                textSlowCount = 0;
+            }
+            nvgText(args.vg, size.x * 0.5f, (readoutH * 0.5f), peakStr, NULL);
             nvgTranslate(args.vg, 0.0f, readoutH + 2.0f);
         }
 
@@ -830,11 +853,14 @@ struct KilpatrickJoystick : widget::OpaqueWidget {
     float xPos = 0.0f;
     float yPos = 0.0f;
     float moveScale;
+    float controlAreaScale = 1.0f;
+    static constexpr float borderSize = 0.5f;  // size for detecting edge buttons
+    int snap = 0;
 
     // create a new label
     KilpatrickJoystick(int id, math::Vec pos, math::Vec size) {
         this->id = id;
-        bgColor = nvgRGBA(0x33, 0x33, 0x33, 0xff);
+        bgColor = nvgRGBA(0x33, 0x33, 0x90, 0xff);
         knobColor = nvgRGBA(0xff, 0x00, 0x00, 0xff);
         box.pos = pos.minus(size.div(2));
         box.size = size;
@@ -851,8 +877,8 @@ struct KilpatrickJoystick : widget::OpaqueWidget {
         }
 
     	nvgBeginPath(args.vg);
-        nvgEllipse(args.vg, (box.size.x * 0.5) + (xPos * box.size.x * 0.5),
-            (box.size.y * 0.5) + (yPos * box.size.y * 0.5), 10.0, 10.0);
+        nvgEllipse(args.vg, (box.size.x * 0.5) + (xPos * controlAreaScale * box.size.x * 0.5),
+            (box.size.y * 0.5) + (-yPos * controlAreaScale * box.size.y * 0.5), 10.0, 10.0);
     	nvgFillColor(args.vg, knobColor);
     	nvgFill(args.vg);
     }
@@ -860,12 +886,93 @@ struct KilpatrickJoystick : widget::OpaqueWidget {
 	void onDragHover(const event::DragHover& e) override {
         Widget::onDragHover(e);
         xPos = putils::clampf(xPos + (e.mouseDelta.x * moveScale), -1.0f, 1.0f);
-        yPos = putils::clampf(yPos + (e.mouseDelta.y * moveScale), -1.0f, 1.0f);
+        yPos = putils::clampf(yPos + (-e.mouseDelta.y * moveScale), -1.0f, 1.0f);
         e.consume(this);
         if(handler) {
-            handler->updateJoystick(id, xPos, -yPos);
+            handler->updateJoystick(id, xPos, yPos);
         }
     }
+
+	void onButton(const event::Button& e) override {
+        float posX = ((e.pos.x / box.size.x) * 2.0f) - 1.0f;
+        float posY = -(((e.pos.y / box.size.y) * 2.0f) - 1.0f);
+
+        if(!snap) {
+            return;
+        }
+
+        if(e.button != GLFW_MOUSE_BUTTON_LEFT || e.action != GLFW_PRESS) {
+            return;
+        }
+
+        // top
+        if(posY > 1.0f - borderSize) {
+            // left
+            if(posX < -1.0f + borderSize) {
+                xPos = -1.0f;
+                yPos = 1.0f;
+            }
+            // centre
+            else if(posX > -0.25f && posX < 0.25f) {
+                xPos = 0.0f;
+                yPos = 1.0f;
+            }
+            // right
+            else if(posX > 1.0f - borderSize) {
+                xPos = 1.0f;
+                yPos = 1.0f;
+            }
+        }
+        // front/back centre
+        else if(posY > -0.25f && posY < 0.25f) {
+            // left
+            if(posX < -1.0f + borderSize) {
+                xPos = -1.0f;
+                yPos = 0.0f;
+            }
+            // right
+            else if(posX > 1.0f - borderSize) {
+                xPos = 1.0f;
+                yPos = 0.0f;
+            }
+        }
+        // bottom
+        else if(posY > -1.0f - borderSize) {
+            // left
+            if(posX < -1.0f + borderSize) {
+                xPos = -1.0f;
+                yPos = -1.0f;
+            }
+            // centre
+            else if(posX > -0.25f && posX < 0.25f) {
+                xPos = 0.0f;
+                yPos = -1.0f;
+            }
+            // right
+            else if(posX > 1.0f - borderSize) {
+                xPos = 1.0f;
+                yPos = -1.0f;
+            }
+        }
+
+        if(handler) {
+            handler->updateJoystick(id, xPos, yPos);
+        }
+        e.consume(this);
+    }
+
+    void onHoverKey(const event::HoverKey& e) override {
+        if(e.key == GLFW_KEY_P) {
+            snap = 1;
+        }
+        e.consume(this);
+    }
+
+    void onLeave(const event::Leave& e) override {
+        snap = 0;
+        e.consume(this);
+    }
+
 };
 
 #endif

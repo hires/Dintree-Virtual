@@ -57,6 +57,8 @@ When the RAND switch is on, instead of sequentially choosing inputs, either by
 CV or clock, a random input is selected. The RAND control observes the CV GAIN
 setting so only inputs within the chosen range will be selected.
 
+<br clear="right"/>
+
 ----
 
 ### V101 Dual Envelope
@@ -92,6 +94,8 @@ ability to use the GATE IN jack to start and stop the LFO. When switching to LFO
 mode, the LFO will run automatically. However, if you input a gate signal, it
 will start and stop the LFO. To reset auto-run mode without a gate preset,
 simply switch the mode to another setting and back to LFO to reset it.
+
+<br clear="right"/>
 
 ----
 
@@ -137,6 +141,8 @@ probably best in most cases. You can use the levelmeters to get a sense of the
 overall output level. Aiming for around 0dB will ensure you drive the next
 module with a decent level.
 
+<br clear="right"/>
+
 ----
 
 ### V103 Reverb Delay
@@ -178,6 +184,8 @@ The delay type switch chooses how the delayed signal is created:
 
 The reverb type switch selects one of two reverb sounds: BIG or SMALL.
 
+<br clear="right"/>
+
 ----
 
 ### V104 Four Vs
@@ -211,6 +219,8 @@ while leaving the voltage setting preset on the VOLTAGE control.
 
 This can be used to manually generate gates or pulses that are easy to control
 with the mouse.
+
+<br clear="right"/>
 
 ----
 
@@ -253,6 +263,8 @@ way to adjust gain and invert a signal. By using both outputs at the same time
 you can easily make opposing CV signals for such things as panning circuits,
 stereo phasing effects, or multiple filters which cross over for unique timbral
 characteristics.
+
+<br clear="right"/>
 
 ----
 
@@ -321,7 +333,7 @@ All outputs are processed at the full system rate. You might want to use a slew
 processor or other type of filter to slow down very fast signals so they will create
 more interesting outputs, especially when using the equal and not equal functions.
 
-
+<br clear="right"/>
 
 ----
 ### V218 S&H / Clock / Noise Generator
