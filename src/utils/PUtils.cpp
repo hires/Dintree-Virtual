@@ -4,6 +4,8 @@
  * Written by: Andrew Kilpatrick
  * Copyright 2021: Andrew Kilpatrick
  *
+ * Please see the license file included with this repo for license details.
+ *
  */
 #include "PUtils.h"
 #include "DspUtils2.h"

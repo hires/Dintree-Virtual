@@ -4,6 +4,8 @@
  * Copyright 2020: Kilpatrick Audio
  * Written by: Andrew Kilpatrick
  *
+ * Please see the license file included with this repo for license details.
+ *
  */
 #ifndef DSP_UTILS2_H
 #define DSP_UTILS2_H

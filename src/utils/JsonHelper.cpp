@@ -4,6 +4,8 @@
  * Written by: Andrew Kilpatrick
  * Copyright 2020: Andrew Kilpatrick
  *
+ * Please see the license file included with this repo for license details.
+ *
  */
  #include "../plugin.hpp"
 #include "JsonHelper.h"
