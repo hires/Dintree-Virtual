@@ -280,6 +280,11 @@ simple lag processor to convert a single CV into multiple versions that have
 slightly different offsets. This can create interesting effects with filters.
 
 
+
+
+
+
+
 ----
 ### V201 Tri Comparator
 **Analog Comparator Functions**
@@ -319,15 +324,6 @@ All outputs are processed at the full system rate. You might want to use a slew
 processor or other type of filter to slow down very fast signals so they will create
 more interesting outputs, especially when using the equal and not equal functions.
 
-----
-### V202 Levelmeter
-**Stereo Audio Levelmeter**
-
-<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V202-Levelmeter.png" />
-
-The V202 Levelmeter is a useful tool especially for development. I often wanted to test signals and read out
-exact dB values. The V202 is a peak reading meter with 0.0dBFS normalized to 10Vpk. (20Vpp) There is a two-pole
-high-pass filter set at 10Hz to strip out DC which can ruin the measurement of small signals.
 
 
 ----
