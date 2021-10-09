@@ -258,9 +258,8 @@ characteristics.
 
 ### V107 Dual Slew
 
-**Dual Slew Rate Limiter**
-
-<img src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V107-Dual_Slew.png" />
+|---|---|
+| **Dual Slew Rate Limiter**
 
 The V107 Dual Slew is a VCV clone of the [Dintree D107 Dual Slew](http://dintree.com/#D107)
 DIY module by Andrew Kilpatrick. It simulates a basic RC filter slew rate limiter
@@ -280,10 +279,11 @@ octave when used with a V/oct type of CV signal. Another use is for making a
 simple lag processor to convert a single CV into multiple versions that have
 slightly different offsets. This can create interesting effects with filters.
 
+|
 
+<img src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V107-Dual_Slew.png" />
 
-
-
+|
 
 
 ----
