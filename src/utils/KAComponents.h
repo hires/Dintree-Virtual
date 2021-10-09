@@ -693,13 +693,17 @@ struct KilpatrickFramebufferRGB565 : widget::TransparentWidget, BGfxScreen {
         dirty = 1;
     }
 };
+#endif
 
 // bipolar signal red/green LED mapper
 inline void KARedGreenLEDMap(Light& lightR, Light& lightG, float level) {
     lightR.setBrightness(putils::clampf(-level, 0.0f, 1.0f));  // red
     lightG.setBrightness(putils::clampf(level, 0.0f, 1.0f));  // green
 }
-#endif
+
+struct KASignalLED {
+
+};
 
 // levelmeter
 struct KALevelmeter {

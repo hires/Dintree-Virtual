@@ -13,6 +13,11 @@ and his DIY and commercial music and audio projects.
 * [Andrew Kilpatrick](https://www.andrewkilpatrick.org) - Creator of these modules (hardware and software)
 * [Kilpatrick Audio](https://www.kilpatrickaudio.com) - Commercial music products from the creator
 
+## Licence
+
+All code in this repository is licensed under GPL 3.0 or later. All panel designs, graphics and
+logos are copyright Andrew Kilpatrick and may not be redistributed without permission.
+
 ## Modules
 
 ### V100 Scanner
@@ -359,55 +364,6 @@ high-pass filter set at 10Hz to strip out DC which can ruin the measurement of s
 
 
 </pre>
-
-----
-### V203 Test Osc
-**Test Oscillator with Sweep**
-
-<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V203-Test_Osc.png" />
-
-The V203 Test Osc can generate useful test tones for development or alignment purposes. The output can sweep
-a sine wave across the audio band and this can be triggered by an external CV trigger signal.
-
-The functions and controls are as follows:
-
-- **LEVEL** - Sets the absolute output level where 0dB equals an output of 10Vpk. (20Vpp)
-- **FREQ** - Sets the frequency when in sine wave mode. (not sweeping)
-- **SPEED** - Sets the sweep speed for *LOG* or *LIN* mode. The set speed in seconds is shown on the display. A percentage of sweep completion will also be displayed when sweeping.
-- **TONE** - Set the output tone to *SINE*, *WH* (white noise), or *PK*. (pink noise) The pink noise source is approximated with a series of low-pass filter. Please check the spectra before using it for high precision tasks.
-- **SWEEP** - Sets the sweep mode either *OFF*, *LOG* (log sweep) or *LIN*. (linear sweep)
-- **STEP** - Sets the frequency step size for the sine output when using manual frequency setting. Choices are *3RD*, (3rd octave steps), *OCT* (octave steps) and *LOG* which goes by semitone.
-- **TRIG** - Button and CV input jack. Starts a sweep or momentarily produces output.
-- **ON** - Sets the unit into either *MOM* (momentary) or continuous *ON* mode.
-
-Note that the *REF* level displayed is a convenience feature. You can scroll your middle mouse button over the display to adjust it relative to the ABS value.
-
-----
-### V204 Quad Panner
-**Quad Panner with CV Control**
-
-<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V204-Quad_Panner.png" />
-
-The V204 Quad Panner is a mono input quadraphonic panner that uses a fake on-screen joystick (not that great) or a pair
-of X and Y CV inputs. The panning uses a quasi-constant power law whereby the middle position will be 3dB down in each
-direction. For instance, full front and centre will be 3dB down in front left and front right outputs. The centre stick
-position will be 6dB down in all four channels. This is unlike the basic pan pot law of 6dB down.
-
-The connections and controls are as follows:
-
-- **FL** - front left output
-- **FR** - front right output
-- **SL** - surround left output
-- **SR** - surround right output
-- **IN** - signal input
-- **X** - X panning CV input - -5V to +5V deflects fully when the stick is in the middle position
-- **Y** - Y panning CV input - -5V to +5V deflects fully when the stick is in the middle position
-- **MULTI** - polyphonic cable output carrying four channels:
-  - **1** = FL
-  - **2** = FR
-  - **3** = SL
-  - **4** = SR
-- **RESET** - resets the stick to the centre position
 
 ----
 ### V218 S&H / Clock / Noise Generator

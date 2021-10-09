@@ -167,7 +167,7 @@ std::string factorToPercentStr(float val);
 std::string freqToStr(float freq);
 
 // format a string the right way
-inline std::string format(const std::string& format, ...) {
+inline std::string format(std::string format, ...) {
     va_list args;
     va_start (args, format);
     size_t len = std::vsnprintf(NULL, 0, format.c_str(), args);
@@ -181,10 +181,11 @@ inline std::string format(const std::string& format, ...) {
 
 // read a return a line from a file - returns -1 on error or EOF
 inline int readline(FILE *file, std::string *line) {
+/*
     char *str = NULL;
     size_t len = 0;
     int ret;
-    ret = getline(&str, &len, file);
+    ret = std::getline(&str, &len, file);
     if(ret < 1) {
         *line = "";
         return -1;
@@ -192,6 +193,8 @@ inline int readline(FILE *file, std::string *line) {
     *line = str;
     std::free(str);
     return ret;
+*/
+    return -1;  // implement in cross-platform way
 }
 
 };

@@ -37,9 +37,6 @@ extern Model* modelV104_Four_Vs;
 extern Model* modelV105_Quad_CV_Proc;
 extern Model* modelV107_Dual_Slew;
 extern Model* modelV201_Tri_Comparator;
-extern Model* modelV202_Levelmeter;
-extern Model* modelV203_Test_Osc;
-extern Model* modelV204_Quad_Panner;
 extern Model* modelV218_SH_Clock_Noise;
 
 #define PLATFORM_VCV
