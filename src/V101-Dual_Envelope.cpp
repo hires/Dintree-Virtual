@@ -232,7 +232,10 @@ struct V101_Dual_Envelope : Module {
         configParam(POT_RELEASE2, 0.f, 1.f, 0.f, "RELEASE 2");
         configParam(MODE1_SW, 0.0f, 2.0f, 0.0f, "MODE 1");
         configParam(MODE2_SW, 0.0f, 2.0f, 0.0f, "MODE 2");
-
+        configInput(GATE1_IN, "GATE 1 IN");
+        configInput(GATE2_IN, "GATE 2 IN");
+        configOutput(ENV1_OUT, "ENV 1 OUT");
+        configOutput(ENV2_OUT, "ENV 2 OUT");
         // reset stuff
         onReset();
         onSampleRateChange();

@@ -64,7 +64,10 @@ struct V104_Four_Vs : Module {
         configParam(POT_VOLTAGE2, -5.0f, 5.0f, 0.f, "VOLTAGE 2");
         configParam(POT_VOLTAGE3, -5.0f, 5.0f, 0.f, "VOLTAGE 3");
         configParam(POT_VOLTAGE4, -5.0f, 5.0f, 0.f, "VOLTAGE 4");
-
+        configOutput(OUT1, "OUT 1");
+        configOutput(OUT2, "OUT 2");
+        configOutput(OUT3, "OUT 3");
+        configOutput(OUT4, "OUT 4");
         // reset stuff
         onReset();
         onSampleRateChange();

@@ -74,7 +74,22 @@ struct V105_Quad_CV_Proc : Module {
         configParam(POT_GAIN2, 0.f, 1.f, 0.f, "");
         configParam(POT_GAIN3, 0.f, 1.f, 0.f, "");
         configParam(POT_GAIN4, 0.f, 1.f, 0.f, "");
-
+        configInput(IN1A, "IN 1 A");
+        configInput(IN1B, "IN 1 B");
+        configInput(IN2A, "IN 2 A");
+        configInput(IN2B, "IN 2 B");
+        configInput(IN3A, "IN 3 A");
+        configInput(IN3B, "IN 3 B");
+        configInput(IN4A, "IN 4 A");
+        configInput(IN4B, "IN 4 B");
+        configOutput(OUT1P, "OUT 1 +");
+        configOutput(OUT1M, "OUT 1 -");
+        configOutput(OUT2P, "OUT 2 +");
+        configOutput(OUT2M, "OUT 2 -");
+        configOutput(OUT3P, "OUT 3 +");
+        configOutput(OUT3M, "OUT 3 -");
+        configOutput(OUT4P, "OUT 4 +");
+        configOutput(OUT4M, "OUT 4 -");
         // reset stuff
         onReset();
         onSampleRateChange();

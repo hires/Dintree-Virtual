@@ -122,7 +122,10 @@ struct V103_Reverb_Delay : Module {
         configParam(POT_DEL_TIME, 0.f, 1.f, 0.f, "DELAY TIME");
         configParam(DEL_SW, 0.0f, 2.0f, 0.0f, "DELAY TYPE");
         configParam(REV_SW, 0.0f, 1.0f, 0.0f, "REVERB_TYPE");
-
+        configInput(INL, "IN L");
+        configInput(INR, "IN R");
+        configOutput(OUTL, "OUT L");
+        configOutput(OUTR, "OUT R");        
         // reset stuff
         onReset();
         onSampleRateChange();

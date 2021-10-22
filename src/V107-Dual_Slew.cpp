@@ -58,7 +58,10 @@ struct V107_Dual_Slew : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(POT_SLEW1, 0.f, 1.f, 0.f, "SLEW 1");
 		configParam(POT_SLEW2, 0.f, 1.f, 0.f, "SLEW 2");
-
+        configInput(IN1, "IN 1");
+        configInput(IN2, "IN 2");
+        configOutput(OUT1, "OUT 1");
+        configOutput(OUT2, "OUT 2");
         // reset stuff
         hist1 = 0.0;
         hist2 = 0.0;

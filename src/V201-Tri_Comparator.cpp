@@ -31,9 +31,9 @@ struct V201_Tri_Comparator : Module {
 		NUM_PARAMS
 	};
 	enum InputIds {
-		A_IN,
-		B_IN,
-		C_IN,
+		IN_A,
+		IN_B,
+		IN_C,
 		NUM_INPUTS
 	};
 	enum OutputIds {
@@ -88,7 +88,25 @@ struct V201_Tri_Comparator : Module {
 	V201_Tri_Comparator() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(OUT_RANGE_SW, 0.f, 1.f, 0.f, "OUT RANGE");
-
+        configInput(IN_A, "IN A");
+        configInput(IN_B, "IN B");
+        configInput(IN_C, "IN C");
+        configOutput(F1_OUT, "OUT A=B=C");
+        configOutput(F2_OUT, "OUT A=B<C");
+        configOutput(F3_OUT, "OUT A=B>C");
+        configOutput(F4_OUT, "OUT A=B!=C");
+        configOutput(F5_OUT, "OUT A<B=C");
+        configOutput(F6_OUT, "OUT A<B<C");
+        configOutput(F7_OUT, "OUT A<B>C");
+        configOutput(F8_OUT, "OUT A<B!=C");
+        configOutput(F9_OUT, "OUT A>B=C");
+        configOutput(F10_OUT, "OUT A>B<C");
+        configOutput(F11_OUT, "OUT A>B>C");
+        configOutput(F12_OUT, "OUT A>B!=C");
+        configOutput(F13_OUT, "OUT A!=B=C");
+        configOutput(F14_OUT, "OUT A!=B<C");
+        configOutput(F15_OUT, "OUT A!=B>C");
+        configOutput(F16_OUT, "OUT A!=B!=C");
         // reset stuff
         onReset();
         onSampleRateChange();
@@ -105,9 +123,9 @@ struct V201_Tri_Comparator : Module {
             setParams();
         }
 
-        ina = inputs[A_IN].getVoltage();
-        inb = inputs[B_IN].getVoltage();
-        inc = inputs[C_IN].getVoltage();
+        ina = inputs[IN_A].getVoltage();
+        inb = inputs[IN_B].getVoltage();
+        inc = inputs[IN_C].getVoltage();
         aeb = isNear(ina, inb, EQUAL_NEARNESS);
         bec = isNear(inb, inc, EQUAL_NEARNESS);
 
@@ -320,9 +338,9 @@ struct V201_Tri_ComparatorWidget : ModuleWidget {
 
 		addParam(createParamCentered<KilpatrickToggle2P>(mm2px(Vec(51.48, 112.5)), module, V201_Tri_Comparator::OUT_RANGE_SW));
 
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(9.48, 112.5)), module, V201_Tri_Comparator::A_IN));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(23.48, 112.5)), module, V201_Tri_Comparator::B_IN));
-		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(37.48, 112.5)), module, V201_Tri_Comparator::C_IN));
+		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(9.48, 112.5)), module, V201_Tri_Comparator::IN_A));
+		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(23.48, 112.5)), module, V201_Tri_Comparator::IN_B));
+		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(37.48, 112.5)), module, V201_Tri_Comparator::IN_C));
 
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(9.48, 24.5)), module, V201_Tri_Comparator::F1_OUT));
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(23.48, 24.5)), module, V201_Tri_Comparator::F2_OUT));

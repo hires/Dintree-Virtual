@@ -102,7 +102,16 @@ struct V102_Output_Mixer : Module {
         configParam(POT_LEVEL4, 0.f, 1.f, 0.f, "LEVEL 4");
         configParam(POT_PAN4, 0.f, 1.f, 0.5f, "PAN 4");
         configParam(POT_MASTER, 0.f, 1.f, 0.5f, "POT_MASTER");
-
+        configInput(IN1, "IN 1");
+        configInput(IN2, "IN 2");
+        configInput(IN3, "IN 3");
+        configInput(IN4, "IN 4");
+        configInput(SUB_INL, "SUB IN L");
+        configInput(SUB_INR, "SUB IN R");
+        configOutput(OUTL, "OUT L");
+        configOutput(OUTR, "OUT R");
+        configOutput(PRE_OUTL, "PRE OUT L");
+        configOutput(PRE_OUTR, "PRE OUT R");
         // reset stuff
         onReset();
         onSampleRateChange();

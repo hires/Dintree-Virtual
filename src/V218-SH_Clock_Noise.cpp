@@ -87,7 +87,18 @@ struct V218_SH_Clock_Noise : Module {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(SH_LEVEL_POT, 0.f, 1.f, 0.f, "S&H LEVEL");
 		configParam(CLOCK_FREQ_POT, 0.0f, 1.0f, 0.f, "CLOCK FREQ");
-
+        configInput(SH_GATE_IN, "GATE IN");
+        configInput(CLOCK_SYNC_IN, "SYNC IN");
+        configInput(SH_TRIG_IN, "TRIG IN");
+        configInput(CLOCK_FM_IN, "FM IN");
+        configInput(SH_IN, "SH IN");
+        configOutput(CLOCK_TRIG_OUT, "TRIG OUT");
+        configOutput(NOISE_W_OUT, "NOISE W OUT");
+        configOutput(CLOCK_SAW_OUT, "SAW OUT");
+        configOutput(NOISE_P_OUT, "NOISE P OUT");
+        configOutput(SH_OUT, "SH OUT");
+        configOutput(CLOCK_SQ_OUT, "SQ OUT");
+        configOutput(NOISE_R_OUT, "NOISE R OUT");
         // reset stuff
         onReset();
         onSampleRateChange();

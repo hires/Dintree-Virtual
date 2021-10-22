@@ -83,7 +83,17 @@ struct V100_Scanner : Module {
     V100_Scanner() {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configParam(POT_RANGE, 0.f, 1.f, 0.f, "POT_RANGE");
-
+        configInput(IN1, "IN 1");
+        configInput(IN2, "IN 2");
+        configInput(IN3, "IN 3");
+        configInput(IN4, "IN 4");
+        configInput(IN5, "IN 5");
+        configInput(IN6, "IN 6");
+        configInput(IN7, "IN 7");
+        configInput(IN8, "IN 8");
+        configInput(CTRL_IN, "CTRL IN");
+        configOutput(OUTA, "OUT A");
+        configOutput(OUTB, "OUT A-1");
         // reset stuff
         clk_state = 0;
         chan_a = 0;
