@@ -21,6 +21,7 @@
  *
  */
 #include "plugin.hpp"
+#include "utils/DspUtils2.h"
 #include "utils/KAComponents.h"
 #include "utils/MenuHelper.h"
 
@@ -82,7 +83,7 @@ struct V100_Scanner : Module {
     // constructor
     V100_Scanner() {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-        configParam(POT_RANGE, 0.f, 1.f, 0.f, "POT_RANGE");
+        configParam(POT_RANGE, 0.f, 8.0f, 0.f, "POT_RANGE");
         configInput(IN1, "IN 1");
         configInput(IN2, "IN 2");
         configInput(IN3, "IN 3");
@@ -156,7 +157,7 @@ struct V100_Scanner : Module {
         }
 
         // range control
-        range = params[POT_RANGE].getValue() * 7.999;
+        range = dsp2::clampRange(params[POT_RANGE].getValue(), 0.0f, 7.999f);
 
         // process CV input
         if(mode == MODE_CV) {
