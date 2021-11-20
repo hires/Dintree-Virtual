@@ -339,7 +339,7 @@ more interesting outputs, especially when using the equal and not equal function
 ### V218 S&H / Clock / Noise Generator
 **Sample and Hold, Clock and Noise Generator**
 
-<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V218-SH_Clock_Noise.png" />
+<img align="right" src="https://github.com/hires/Dintree-Virtual/raw/master/res/images/V218-SH_Clock-Noise.png" />
 
 The V218 S&H / Clock / Noise Generator is basically three modules in one. It is
 based on the Aries AR-318 module of a similar name. Please note that this is not

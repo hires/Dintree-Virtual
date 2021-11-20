@@ -107,9 +107,7 @@ struct V107_Dual_SlewWidget : ModuleWidget {
         setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/V107-Dual_Slew.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
 		addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(12.706, 24.275)), module, V107_Dual_Slew::POT_SLEW1));
 		addParam(createParamCentered<KilpatrickKnobBlackRed>(mm2px(Vec(12.706, 47.241)), module, V107_Dual_Slew::POT_SLEW2));
