@@ -475,7 +475,7 @@ struct KilpatrickLabel : widget::TransparentWidget {
         this->id = id;
         this->handler = NULL;
         text = "";
-        fontFilename = asset::plugin(pluginInstance, "res/components/fixedsys.ttf");
+        fontFilename = asset::plugin(pluginInstance, "res/components/FSEX302.ttf");
         fontSize = 8;
         rad = mm2px(3.0);
         hAlign = NVG_ALIGN_CENTER;
@@ -765,7 +765,7 @@ struct KALevelmeter {
         pos.y = 0.0f;
         size.x = 5.0f;
         size.y = 100.0f;
-        fontFilename = asset::plugin(pluginInstance, "res/components/fixedsys.ttf");
+        fontFilename = asset::plugin(pluginInstance, "res/components/FSEX302.ttf");
         fontSizeReadout = 9.5f;
         drawReadout = 1;
         readoutH = 12.0f;
